@@ -1,0 +1,115 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-3">
+                    
+            <div class="col-lg-9 col-sm-12 mx-auto mb-5 c">
+                <h1>Modificar Venta</h1>
+            </div>
+
+            <div class="col-11 mx-auto">
+                <div class="col-10 row mx-auto c">
+                    <form action="" method="POST">
+
+                        <div class="col-7 mx-auto mb-4">
+                            <div class="mb-3 c">
+                                <h2 id="cliente">{{ ventax['cliente'] }}</h2>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="col-11 row mx-auto mt-4 c">
+                            <h3>Producto</h3>
+                        </div>
+
+                        <div class="col-11 row mx-auto mb-4 c">
+                            <div class="col-3 mx-auto">
+                                <div class="mb-3">
+                                    <label for="productoCl" class="form-label">Codigo</label>
+                                    <h5 id="productoCl">{{ ventax['productoCl'] }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-6 mx-auto">
+                                <div class="mb-3">
+                                    <label for="producto" class="form-label">Descripcion</label>
+                                    <h5 id="producto">{{ ventax['producto'] }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-3 mx-auto">
+                                <div class="mb-3">
+                                    <label for="productoCl" class="form-label">Valor Un</label>
+                                    <h5 id="productoCl">{{ ventax['productoVal'] }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        
+                        <div class="col-10 row mx-auto mt-4 c">
+                            <div class="col-8 mb-3">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="ventaVal">Valor en Venta</span>
+                                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="ventaVal" name="ventaVal" value="{{ ventax.productoVal }}" placeholder="{{ ventax.productoVal }}">
+                                </div>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="inputCant">Cantidad</span>
+                                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCant" name="qty" value="{{ ventax.qty }}" placeholder="{{ ventax.qty }}">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="col-11 row mx-auto mt-4 mb-4 c">
+                            <div class="col-4 mx-auto">
+                                <div class="mb-3">
+                                    <label for="productoCl" class="form-label">Revista</label>
+                                    <h5 id="productoCl">{{ ventax['revista'] }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 mx-auto">
+                                <div class="mb-3">
+                                    <label for="productoCl" class="form-label">Campaña</label>
+                                    <h5 id="productoCl">{{ ventax['campanna'] }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-4 mx-auto">
+                                <div class="input-group mt-3">
+                                    <span class="input-group-text" id="inputImprenta">Imprenta</span>
+                                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputImprenta" name="imprenta" value="{{ ventax.imprenta }}" placeholder="{{ ventax.imprenta }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-10 row mx-auto mt-4 c">
+                            <div class="col-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <input class="btn btn-success" type="submit" value="Actualizar">
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}

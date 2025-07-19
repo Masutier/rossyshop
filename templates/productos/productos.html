@@ -1,0 +1,58 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-12 mx-auto p-4 mb-5">
+    <div class="row">
+
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto mt-3">
+
+            <div class="row mb-3">
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <h1>Productos</h1>
+                </div>
+
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <a class="btn btn-success mb-3" href="{{ url_for('crearProducto') }}">Crear Producto</a>
+                </div>
+            </div>
+
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">_Id</th>
+                            <th scope="col">CL</th>
+                            <th scope="col">DESCRIPCION</th>
+                            <th scope="col">P_CATALOGO</th>
+                            <th scope="col">UBICACION</th>
+                            <th scope="col">REVISTA</th>
+                            <th scope="col">FECHA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr>
+                            <td>{{ producto['ID'] }}</td>
+                            <td>{{ producto['CL'] }}</td>
+                            <td>{{ producto['DESCRIPCION'] }}</td>
+                            <td>{{ "{:,}".format(producto['P_CATALOGO']) }}</td>
+                            <td>{{ producto['UBICACION'] }}</td>
+                            <td>{{ producto['REVISTA'] }}</td>
+                            <td>{{ producto['FECHA'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
+
+{% endblock %}

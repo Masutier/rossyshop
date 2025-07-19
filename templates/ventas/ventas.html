@@ -1,0 +1,59 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto mt-3">
+            <div class="col-lg-6 col-sm-10 mx-auto c">
+                <a class="btn btn-primary btn-sm mb-3" href="{{ url_for('all_ventas') }}"><h1>Ventas</h1></a>
+            </div>
+
+            {% include 'partials/navbarVentas.html' %}
+
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">_Id</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Revista</th>
+                            <th scope="col">Camp</th>
+                            <th scope="col">Cant</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">total</th>
+                            <th scope="col">Impreso</th>
+                            <th scope="col">Show</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venta in ventasAll %}
+                        <tr>
+                            <td>{{ venta['id'] }}</td>
+                            <td>{{ venta['cliente'] }}</td>
+                            <td>{{ venta['producto'] }}</td>
+                            <td>{{ venta['revista'] }}</td>
+                            <td>{{ venta['campanna'] }}</td>
+                            <td>{{ venta['qty'] }}</td>
+                            <td>{{ "{:,}".format(venta['productoVal']) }}</td>
+                            <td>{{ "{:,}".format(venta['total']) }}</td>
+                            <td>{{ venta['impreso'] }}</td>
+                            <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarVenta', id=venta['id']) }}" aria-disabled="true">Mostrar</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-lg-11 col-sm-10 mx-auto p-3 mb-5 ">
+
+        <div class="col-md-10 m-5 mx-auto ">
+            <h1>Crear Abono</h1>
+        </div>
+
+        <div class="col-md-11 mx-auto">
+
+            <form action="/crearAbono" method="POST">
+
+                <div class="row">
+                    <div class="col-7 mb-3">
+                        <div class="mb-3">
+                            <label for="cliente" class="form-label">CLIENTE</label>
+                            <select class="form-select" size="4" aria-label="Size 3 select example" name="cliente" required>
+                                {% for cliente in clientes %}
+                                    <option value="{{ cliente['ID'] }}">{{ cliente['ID'] }} - {{ cliente['NOMBRE'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-10 mb-3">
+                            <label for="notas" class="form-label">Notas</label>
+                            <textarea id="txtArea" rows="5" cols="40" name="notas"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-5 mb-3">
+                        <div class="mb-3">
+                            <label for="valor" class="form-label">VALOR</label>
+                            <input type="text" class="form-control" id="valor" name="valor" required>
+                        </div>
+
+                        <div class="col-lg-10 row mt-5 mx-auto ">
+                            <div class="col-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                                </div>
+                            </div>
+
+                            <div class="col-6 mb-3">
+                                <div class="d-grid gap-2">
+                                    <input class="btn btn-success" type="submit" value="Crear">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}
+

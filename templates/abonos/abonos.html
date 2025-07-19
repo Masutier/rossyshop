@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-3">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-3">
+
+            <div class="row mb-3">
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <h1>Abonos</h1>
+                </div>
+
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <a class="btn btn-success mb-3" href="{{ url_for('crearAbono') }}">Crear Abono</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">_Id</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Notas</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Mostrar</th>
+                            <th scope="col">Modificar</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for abono in abonosAll %}
+                        <tr>
+                            <td>{{ abono['id'] }}</td>
+                            <td>{{ abono['cliente'] }}</td>
+                            <td>{{ abono['notas'] }}</td>
+                            <td>{{ "{:,}".format(abono['valor']) }}</td>
+                            <td>{{ abono['fecha'] }}</td>
+                            <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarAbono', id=abono['id']) }}" aria-disabled="true">Mostrar</a></td>
+                            <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('modificarAbono', id=abono['id']) }}" aria-disabled="true">Modificar</a></td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,240 @@
+/* common */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    color: aliceblue;
+    background: #7d70ee;
+    background: -webkit-linear-gradient(to right, #4141a1, #372e9e, #7d70ee);
+    background: linear-gradient(to right, #4141a1, #372e9e, #7d70ee);
+    font-size: 17px;
+    font-family: "Kanit", sans-serif;
+}
+.backs{
+    border-radius: 2rem;
+    padding-top: 3rem;
+    color: white;
+    background: #808285;
+    /* background: #F76300;
+    background: -webkit-linear-gradient(to right, #f58b44, #F76300, #c44f01);
+    background: linear-gradient(to left, #f58b44, #F76300, #c44f01); */
+}
+.backspick{
+    border: solid 3px #0d6efd !important;
+    border-radius: 10px;
+    color: black;
+
+
+}
+.borde {
+    border: solid 1px black !important;
+}
+.borderad {
+    border: solid 1px black !important;
+    border-radius: 10px;
+    padding: 1rem;
+}
+.c {
+    text-align: center !important;
+}
+.hidden {
+    display: none;
+}
+.hr {
+    color: rgb(194, 194, 242);
+    height: 3px !important;
+}
+.sticky {
+    position: sticky;
+    top: 10px;
+}
+.lists{
+    list-style-type: none;
+}
+.btn-color{
+    background:#1b1466;
+    border-color: #1b1466;
+}
+.btn-color2{
+    color: aliceblue;
+    background:#39A900;
+    border-color: #39A900;
+}
+.btn-color2:hover{
+    color: aliceblue;
+    background:#58595b;
+    border-color: #58595b;
+}
+.alrig{
+    text-align: right
+}
+
+
+.card{
+    margin-left: center;
+    gap: 1rem;
+    margin-top: 1px;
+    border-radius: 30px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card2{
+    margin-left: center;
+    gap: 1rem;
+    margin-top: 1px;
+    border-radius: 30px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* banner */
+.imgban1{
+    border-radius: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width:70%;
+}
+.imgban2{
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    width:30%;
+}
+.bshadow{
+    border: 1px solid #BFBFBF;
+    padding: 10px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+}
+
+/* navbart */
+.backnav{
+    color: white;
+    background: #39A900;
+    /* background: #F76300;
+    background: -webkit-linear-gradient(to right, #f58b44, #F76300, #c44f01);
+    background: linear-gradient(to left, #f58b44, #F76300, #c44f01); */
+}
+.imgnav {
+    width: 30%;
+    height: auto;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-margin-bottom-collapse: initial;
+    z-index: 1;
+}
+.imagsize {
+    width: 20%;
+    height: auto;
+    vertical-align: middle;
+    border-style: none;
+    -webkit-margin-bottom-collapse: initial;
+    z-index: 1;
+}
+.atxt1 {
+    color: #9999ff !important;
+}
+.stic {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+}
+.prod {
+    z-index: -1 !important;
+}
+
+/* footer */
+.fonfooter{
+    background-color: white;
+    box-shadow: 0 -6px 5px -4px rgba(65, 61, 61, 0.5);
+    border-radius: 20px;
+}
+.txtfooter{
+    font-size: 1.2rem;
+}
+.txticon{
+    font-size: 1.2rem;
+}
+.piepag{
+    width: auto;
+    overflow: hidden;
+}
+.b-fixed{
+    position: fixed !important;
+    bottom: 10px;
+    z-index: 1;
+}
+.back-black {
+    color: aliceblue;
+    background-color: black;
+}
+.pieimg{
+    border:true;
+    width:auto;
+}
+.iconRed{
+    color: #39A900;
+    font-size: 3rem;
+}
+.logoIcon{
+    height: 3rem;
+    position: relative;
+    left: -30px;
+}
+
+/* back-to-top */
+.backtotop {
+    width: 40pt;
+    height: auto;
+    position: fixed;
+    bottom: 4.50rem;
+    right: 1.75rem;
+    z-index: 999;
+    scroll-behavior: smooth;
+}
+.backtotop:hover {
+    color: transparent;
+    background-color: transparent;
+}
+
+/* bootstrap */
+.toast-body{
+    color: black !important;
+}
+
+/* ICONS */
+.logohash{
+    width: 120px;
+}
+.imgico{
+    width: 35rem;
+}
+
+.imgpage{
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border-style: none;
+    -webkit-margin-bottom-collapse: initial;
+    margin-right: 30PX;
+    padding-top: 2px;
+    padding-left: 30px;
+    z-index: 1000;
+}
+
+/* TEXTOS */
+.txtupp {
+    text-transform: uppercase;
+}
+.txtlow {
+    text-transform: lowercase;
+}
+.txtcap {
+    text-transform: capitalize;
+}
+
+.txtcol0{
+    color: #0d6efd;
+}
+.txtcol1{
+    color: black;
+}
+.txtcol2{
+    color: red;
+}

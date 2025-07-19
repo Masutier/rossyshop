@@ -1,0 +1,67 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto mt-3">
+            <div class="col-lg-9 col-sm-12 mx-auto mb-5 c">
+                <h1>Cartera</h1>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <h4>Total de Ventas = {{ "{:,}".format(totVentas) }}</h4>
+                </div>
+
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <h4>Total en Abonos = {{ "{:,}".format(totAbonos) }}</h4>
+                </div>
+            </div>
+
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Venta</th>
+                            <th scope="col">Abono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cartItem in cartera %}
+                            {% if cartItem.item == 'venta' %}
+                                <tr>
+                                    <td>{{ cartItem['fecha'] }}</td>
+                                    <td>{{ cartItem['cliente'] }}</td>
+                                    <td>{{ cartItem['producto'] }}</td>
+                                    <td>{{ "{:,}".format(cartItem['total']) }}</td>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{ cartItem['fecha'] }}</td>
+                                    <td>{{ cartItem['cliente'] }}</td>
+                                    <td>{{ cartItem['notas'] }}</td>
+                                    <td></td>
+                                    <td>{{ "{:,}".format(cartItem['abono']) }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
+{% endblock %}

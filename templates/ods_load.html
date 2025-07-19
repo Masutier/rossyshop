@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+
+    <div class="col-lg-7 col-sm-10 mx-auto mb-5 c">
+        <img class="imagsize mb-5" src="{{ url_for('static', filename='img/icons/xls.png') }}">
+
+        <div id="spin" class="col-10 mx-auto color_blue mt-3 mb-5 c ">
+            {% include 'partials/spinner.html' %}
+        </div>
+
+        <div id="noSpin" class="col-12 mx-auto px-5 pt-5 pb-3 backs">
+            <form action="/{{ function }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <input class="form-control" type="file" name="plantillaVentas" accept=".xlsx,.xls,.ods" required>
+                </div>
+
+                <div class="col-7 mx-auto">
+                    <div class="d-grid gap-2">
+                        <button  id="butSpin" class="btn btn-success mt-3" type="submit" name="submit">Procesar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for ('static', filename='js/spinner.js') }}"></script>
+
+{% endblock %}

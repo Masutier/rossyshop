@@ -1,0 +1,14 @@
+venv
+
+test.py
+
+docs/
+
+static/docs/*.xls
+static/docs/*.xlsx
+dbs/rossy_acc.db
+dbs/__pycache__/
+genDocs/__pycache__/
+
+__pycache__/
+

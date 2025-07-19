@@ -1,0 +1,181 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-3 ">
+                    
+            <div class="col-lg-9 col-sm-12 mx-auto mb-5 c">
+                <h1>{{ cliente['NOMBRE'] }}</h1>
+            </div>
+
+            <div class="row">
+                <div class="col-9 mx-auto">
+                    <div class="col-12 row mx-auto c">
+                        <div class="col-6 row mx-auto">
+                            <div class="col-5 mb-3">
+                                <a class="btn btn-success btm-sm" href="{{ url_for('modificarCliente', id=cliente['id']) }}" aria-disabled="true"><h5 id="cliente">Modificar</h5></a>
+                            </div>
+                            <div class="col-5 mb-3">
+                                <a class="btn btn-danger btm-sm" href="" aria-disabled="true"><h5 id="delete">Eliminar</h5></a>
+                            </div>
+                        </div>
+                        <div class="col-4 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Cliente De</label>
+                                <h5 id="clientId">{{ cliente['CLIENTE_DE'] }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Cliente Desde</label>
+                                <h5 id="clientId">{{ cliente['FECHA'] }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="col-10 row mx-auto c">
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Teléfono</label>
+                                <h5 id="clientId">{{ cliente['TELEFONO'] }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Dirección</label>
+                                <h5 id="clientId">{{ cliente['DIRECCION'] }}</h5>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Barrio</label>
+                                <h5 id="clientId">{{ cliente['BARRIO'] }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 mx-auto mt-5">
+                    <div class="mb-5 c">
+                        <label for="clientId" class="form-label">Deuda</label>
+                        <h3 id="clientId">{{ "{:,}".format(cliente['DEUDA']) }}</h3>
+                    </div>
+                    <div class="mb-3 c">
+                        <a class="btn btn-success btn-sm" href="" aria-disabled="true">Imprimir Cartera</a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="col-7 row mx-auto c">
+                <div class="col-5 mx-auto">
+                    <div class="mb-3">
+                        <label for="clientId" class="form-label">Ultima Compra</label>
+                        <h5 id="clientId">{{ cliente['FECHA_ULTIMA_COMPRA'] }}</h5>
+                    </div>
+                </div>
+
+                <div class="col-5 mx-auto">
+                    <div class="mb-3">
+                        <label for="clientId" class="form-label">Ultimo Pago</label>
+                        <h5 id="clientId">{{ cliente['FECHA_ULTIMO_ABONO'] }}</h5>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="col-7 mx-auto">
+                <div class="mb-3 c">
+                    <label for="clientId" class="form-label">Revistas</label>
+                    <h5 id="clientId">{{ cliente['COMPRA'] }}</h5>
+                </div>
+            </div>
+
+            <div class="col-5 mx-auto mt-4 c">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="col-12 mx-auto">
+                <div class="col-11 mx-auto mb-4">
+                    <h1 class="c">Movimientos de {{ cliente['NOMBRE'] }}</h1>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-sm-12 mx-auto c">
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Cant</th>
+                                        <th scope="col">Precio</th>
+                                        <th scope="col">total</th>
+                                        <th scope="col">FECHA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for venta in ventasAll %}
+                                    <tr>
+                                        <td>{{ venta['id'] }}</td>
+                                        <td>{{ venta['producto'] }}</td>
+                                        <td>{{ venta['qty'] }}</td>
+                                        <td>{{ "{:,}".format(venta['productoVal']) }}</td>
+                                        <td>{{ "{:,}".format(venta['total']) }}</td>
+                                        <td>{{ venta['fecha'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12 mx-auto c">
+
+                        <div class="table-responsive">
+                            <table class="table table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Notas</th>
+                                        <th scope="col">Valor</th>
+                                        <th scope="col">Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for abono in abonos %}
+                                    <tr>
+                                        <td>{{ abono['ID'] }}</td>
+                                        <td>{{ abono['NOTAS'] }}</td>
+                                        <td>{{ "{:,}".format(abono['VALOR']) }}</td>
+                                        <td>{{ abono['FECHA'] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+<div class="col-2 mx-auto mt-5">
+
+    <div class="col-9 mx-auto mb-4 c">
+        <div class="d-grid gap-2">
+            <a class="btn btn-warning btn-sm mb-3" href="{{ url_for('crearVenta') }}">Crear Venta</a>
+            <a class="btn btn-warning btn-sm mb-3" href="{{ url_for('crearAbono') }}">Crear Abono</a>
+            <hr>
+            <a class="btn btn-info btn-sm mb-3" href="{{ url_for('registrosExcel') }}">Registros Excel</a>
+            <hr>
+            <a class="btn btn-success btn-sm mb-3" href="{{ url_for('cobrosXlsx', filter='Novaventa') }}">Generar Recibos Novaventa</a>
+            <a class="btn btn-success btn-sm mb-3" href="{{ url_for('cobrosXlsx', filter='Leoniza') }}">Generar Recibos Leoniza</a>
+            <a class="btn btn-success btn-sm mb-3" href="{{ url_for('cobrosXlsx', filter='Moda_Int') }}">Generar Recibos Moda_I</a>
+            <a class="btn btn-success btn-sm mb-3" href="{{ url_for('cobrosXlsx', filter='Inventario') }}">Generar Recibos Inventario</a>
+            <hr>
+            <a class="btn btn-primary btn-sm mb-3" href="{{ url_for('cartera') }}">Cartera</a>
+            <a class="btn btn-success btn-sm mb-3" href="{{ url_for('carteraXlsx') }}">Generar Cartera</a>
+            <hr>
+        </div>
+    </div>
+    <hr>
+
+</div>

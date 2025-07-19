@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-3">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-4">
+                    
+            <div class="col-md-10 mx-auto ">
+                <h1>Crear Producto</h1>
+            </div>
+
+            <div class="col-md-11 mx-auto mt-5">
+                <form action="/crearProducto" method="POST">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputcode">Codigo</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputcode" name="cl" required>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputTel">Descripción</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputTel" name="descripcion" required>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputLista">Precio Lista</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputLista" name="plista">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputCatalog">Precio Catalogo</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCatalog" name="pcatalogo" required>
+                            </div>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputRevista">Revista</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputRevista" name="revista" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputCampanna">Campanna</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCampanna" name="campanna" required>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputUbica">Ubicación</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputUbica" name="ubica">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10 row mt-5 mx-auto ">
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                            </div>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <input class="btn btn-success" type="submit" value="Crear">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}

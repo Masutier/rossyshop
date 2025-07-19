@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto">
+            <div class="col-9 mx-auto mb-4">
+                <h1 class="c">Cartera</h1>
+            </div>
+
+            <div class="col-10 mx-auto mb-4 c">
+                {% for name in allnames %}
+                    <button class="btn btn-light btn-sm mx-auto m-1" onclick="goBack()"><a href="#{{ name }}">{{ name }}</a></button>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-12 col-sm-12 mx-auto c">
+                {% for name in allnames %}
+                    <div id='{{ name }}'>
+                        <h3>{{ name }}</h3>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Revista</th>
+                                    <th scope="col">Cant</th>
+                                    <th scope="col">Venta</th>
+                                    <th scope="col">Abono</th>
+                                    <th scope="col">FECHA</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cartera %}
+                                    {% if item['cliente'] == name %}
+                                    <tr>
+                                        <td>{{ item['id'] }}</td>
+                                        <td>{{ item['descripcion'] }}</td>
+                                        <td>{{ item['revista'] }}</td>
+                                        <td>{{ item['qty'] }}</td>
+                                        {% if item['Vtotal'] %}
+                                            <td>{{ "{:,}".format(item['Vtotal']) }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        {% if item['Atotal'] %}
+                                            <td>{{ "{:,}".format(item['Atotal']) }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        <td>{{ item['fecha'] }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                            <tbody>
+                                {% for totales in totcartera %}
+                                    {% if totales['cliente'] == name %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td><h5>TOTALES</h5></td>
+                                        <td></td>
+                                        <td><h5>{{ "{:,}".format(totales['totVentas']) }}</h5></td>
+                                        <td><h5>{{ "{:,}".format(totales['totAbonos']) }}</h5></td>
+                                        <td></td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

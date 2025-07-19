@@ -1,0 +1,13 @@
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="col-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show">
+            <h3>{{ message }}</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+

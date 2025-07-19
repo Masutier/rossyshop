@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-3">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-4">
+                    
+            <div class="col-md-10 mx-auto ">
+                <h1>Crear Cliente</h1>
+            </div>
+
+            <div class="col-md-11 mx-auto mt-5">
+                <form action="/crearCliente" method="POST">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputName">Nombre</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputName" name="nombre" required>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputTel">Teléfono</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputTel" name="telefono">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputDir">Dirección</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputDir" name="direccion">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputBarr">Barrio</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputBarr" name="barrio">
+                            </div>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputEmpre">Empresa</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputEmpre" name="empresa">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputCliDe">Cliente De</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCliDe" name="cliente_de">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputComp">Compra</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputComp" name="compra">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-10 row mx-auto mt-4 c">
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <input class="btn btn-success" type="submit" value="Crear">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}
