@@ -28,7 +28,6 @@ DOWNLOAD_PATH = "static/docs/"
 sudo systemctl daemon-reload
 sudo systemctl start evalinstructor
 sudo systemctl enable evalinstructor  # Auto-start on boot
-
 sudo systemctl status evalinstructor  # Verify it's running
 """
 
@@ -694,6 +693,6 @@ def carteraXlsx():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
 
 
