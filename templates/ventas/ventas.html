@@ -41,8 +41,17 @@
                             <td>{{ venta['revista'] }}</td>
                             <td>{{ venta['campanna'] }}</td>
                             <td>{{ venta['qty'] }}</td>
-                            <td>{{ "{:,}".format(venta['productoVal']) }}</td>
-                            <td>{{ "{:,}".format(venta['total']) }}</td>
+                            {% if venta['productoVal'] %}
+                                <td>{{ "{:,}".format(venta['productoVal']) }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
+
+                            {% if venta['total'] %}
+                                <td>{{ "{:,}".format(venta['total']) }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
                             <td>{{ venta['impreso'] }}</td>
                             <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarVenta', id=venta['id']) }}" aria-disabled="true">Mostrar</a></td>
                         </tr>

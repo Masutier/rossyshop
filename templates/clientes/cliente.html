@@ -66,7 +66,11 @@
                 <div class="col-3 mx-auto mt-5">
                     <div class="mb-5 c">
                         <label for="clientId" class="form-label">Deuda</label>
-                        <h3 id="clientId">{{ "{:,}".format(cliente['DEUDA']) }}</h3>
+                        {% if cliente['DEUDA'] %}
+                            <h3 id="clientId">{{ "{:,}".format(cliente['DEUDA']) }}</h3>
+                        {% else %}
+                            <h3 id="clientId">0</h3>
+                        {% endif %}
                     </div>
                     <div class="mb-3 c">
                         <a class="btn btn-success btn-sm" href="" aria-disabled="true">Imprimir Cartera</a>
@@ -133,8 +137,16 @@
                                         <td>{{ venta['id'] }}</td>
                                         <td>{{ venta['producto'] }}</td>
                                         <td>{{ venta['qty'] }}</td>
-                                        <td>{{ "{:,}".format(venta['productoVal']) }}</td>
-                                        <td>{{ "{:,}".format(venta['total']) }}</td>
+                                        {% if venta['productoVal'] %}
+                                            <td>{{ "{:,}".format(venta['productoVal']) }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                        {% if venta['total'] %}
+                                            <td>{{ "{:,}".format(venta['total']) }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
                                         <td>{{ venta['fecha'] }}</td>
                                     </tr>
                                     {% endfor %}
@@ -160,7 +172,11 @@
                                     <tr>
                                         <td>{{ abono['ID'] }}</td>
                                         <td>{{ abono['NOTAS'] }}</td>
-                                        <td>{{ "{:,}".format(abono['VALOR']) }}</td>
+                                        {% if abono['VALOR'] %}
+                                            <td>{{ "{:,}".format(abono['VALOR']) }}</td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
                                         <td>{{ abono['FECHA'] }}</td>
                                     </tr>
                                     {% endfor %}

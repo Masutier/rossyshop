@@ -70,8 +70,17 @@
                                         <td></td>
                                         <td><h5>TOTALES</h5></td>
                                         <td></td>
-                                        <td><h5>{{ "{:,}".format(totales['totVentas']) }}</h5></td>
-                                        <td><h5>{{ "{:,}".format(totales['totAbonos']) }}</h5></td>
+                                        {% if totales['totVentas'] %}
+                                            <td>{{ "{:,}".format(totales['totVentas']) }}</td>
+                                        {% else %}
+                                            <td>0</td>
+                                        {% endif %}
+
+                                        {% if totales['totAbonos'] %}
+                                            <td>{{ "{:,}".format(totales['totAbonos']) }}</td>
+                                        {% else %}
+                                            <td>0</td>
+                                        {% endif %}
                                         <td></td>
                                     </tr>
                                     {% endif %}

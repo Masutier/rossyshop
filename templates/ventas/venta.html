@@ -57,12 +57,21 @@
                 <hr>
 
                 <div class="col-10 row mx-auto c">
-                    <div class="col-3 mx-auto">
-                        <div class="mb-3">
-                            <label for="clientId" class="form-label">Precio Catalogo</label>
-                            <h5 id="clientId">{{ "{:,}".format(venta['P_CATALOGO_PRODUCTO']) }}</h5>
+                    {% if venta['P_CATALOGO_PRODUCTO'] %}
+                        <div class="col-3 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <h5 id="clientId">{{ "{:,}".format(venta['P_CATALOGO_PRODUCTO']) }}</h5>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="col-3 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <h5 id="clientId">0</h5>
+                            </div>
+                        </div>
+                    {% endif %}
                     
                     <div class="col-4 mx-auto">
                         <div class="mb-3">
@@ -70,12 +79,21 @@
                             <h5 id="clientId">{{ venta['CANTIDAD'] }}</h5>
                         </div>
                     </div>
-                    <div class="col-4 mx-auto">
-                        <div class="mb-3">
-                            <label for="clientId" class="form-label">Total Venta</label>
-                            <h5 id="clientId">{{ "{:,}".format(total) }}</h5>
+                    {% if total %}
+                        <div class="col-4 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <h5 id="clientId">{{ "{:,}".format(total) }}</h5>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="col-4 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <h5 id="clientId">0</h5>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <hr>
 
@@ -94,7 +112,6 @@
                                 <h5 id="clientId">0</h5>
                             </div>
                         </div>
-
                     {% endif %}
                     <div class="col-4 mx-auto">
                         <div class="mb-3">

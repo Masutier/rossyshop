@@ -32,7 +32,6 @@
                             <th scope="col">Fecha</th>
                             <th scope="col">Mostrar</th>
                             <th scope="col">Modificar</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -41,11 +40,14 @@
                             <td>{{ abono['id'] }}</td>
                             <td>{{ abono['cliente'] }}</td>
                             <td>{{ abono['notas'] }}</td>
-                            <td>{{ "{:,}".format(abono['valor']) }}</td>
+                            {% if abono['valor'] %}
+                                <td>{{ "{:,}".format(abono['valor']) }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                             <td>{{ abono['fecha'] }}</td>
                             <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarAbono', id=abono['id']) }}" aria-disabled="true">Mostrar</a></td>
                             <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('modificarAbono', id=abono['id']) }}" aria-disabled="true">Modificar</a></td>
-
                         </tr>
                         {% endfor %}
                     </tbody>

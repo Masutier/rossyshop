@@ -40,7 +40,11 @@
                             <td>{{ producto['ID'] }}</td>
                             <td>{{ producto['CL'] }}</td>
                             <td>{{ producto['DESCRIPCION'] }}</td>
-                            <td>{{ "{:,}".format(producto['P_CATALOGO']) }}</td>
+                            {% if producto['P_CATALOGO'] %}
+                                <td>{{ "{:,}".format(producto['P_CATALOGO']) }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
                             <td>{{ producto['UBICACION'] }}</td>
                             <td>{{ producto['REVISTA'] }}</td>
                             <td>{{ producto['FECHA'] }}</td>

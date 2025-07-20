@@ -45,7 +45,11 @@
                             <td>{{ cliente['TELEFONO'] }}</td>
                             <td>{{ cliente['CLIENTE_DE'] }}</td>
                             <td>{{ cliente['COMPRA'] }}</td>
-                            <td>{{ "{:,}".format(cliente['DEUDA']) }}</td>
+                            {% if cliente['DEUDA'] %}
+                                <td>{{ "{:,}".format(cliente['DEUDA']) }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                             <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarCliente', id=cliente['ID']) }}" aria-disabled="true">Mostrar</a></td>
                             <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('modificarCliente', id=cliente['ID']) }}" aria-disabled="true">Modificar</a></td>
                         </tr>

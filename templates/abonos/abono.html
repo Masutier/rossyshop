@@ -38,7 +38,12 @@
                     <div class="col-6 mx-auto">
                         <div class="mb-3">
                             <label for="valor" class="form-label">Valor</label>
-                            <h5 id="valor">{{ "{:,}".format(abono['valor']) }}</h5>
+                            {% if abono['valor'] %}
+                                <h5 id="valor">{{ "{:,}".format(abono['valor']) }}</h5>
+                            {% else %}
+                                <h5 id="valor">0</h5>
+                            {% endif %}
+                            
                         </div>
                     </div>
                     <div class="col-6 mx-auto">
