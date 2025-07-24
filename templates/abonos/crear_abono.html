@@ -11,9 +11,8 @@
         <div class="col-md-11 mx-auto">
 
             <form action="/crearAbono" method="POST">
-
                 <div class="row">
-                    <div class="col-7 mb-3">
+                    <div class="col-lg-5 col-sm-7 mx-auto mb-3">
                         <div class="mb-3">
                             <label for="cliente" class="form-label">CLIENTE</label>
                             <select class="form-select" size="4" aria-label="Size 3 select example" name="cliente" required>
@@ -23,19 +22,19 @@
                             </select>
                         </div>
 
-                        <div class="col-10 mb-3">
+                        <div class="col-lg-4 mb-3">
                             <label for="notas" class="form-label">Notas</label>
-                            <textarea id="txtArea" rows="5" cols="40" name="notas"></textarea>
+                            <textarea id="txtArea" rows="5" cols="33" name="notas"></textarea>
                         </div>
                     </div>
 
-                    <div class="col-5 mb-3">
+                    <div class="col-lg-5 col-sm-7 mx-auto mb-3">
                         <div class="mb-3">
                             <label for="valor" class="form-label">VALOR</label>
                             <input type="text" class="form-control" id="valor" name="valor" required>
                         </div>
 
-                        <div class="col-lg-10 row mt-5 mx-auto ">
+                        <div class="row mt-5 mx-auto ">
                             <div class="col-6 mb-3">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-warning" onclick="goBack()">Regresar</button>

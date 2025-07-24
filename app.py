@@ -222,19 +222,26 @@ def historia_ventas():
 
 @app.route('/crearVenta', methods=['GET', 'POST'])
 def crearVenta():
+    revistas = []
     sqlQuery = """SELECT ID, NOMBRE FROM clientes"""
     clientes = call_db_dict(sqlQuery,)
     sqlQuery = """SELECT * FROM productos ORDER BY CL ASC"""
     productos = call_db_dict(sqlQuery,)
 
+    for prod in productos:
+        if prod['REVISTA'] not in revistas:
+            revistas.append(prod['REVISTA'])
+
     if request.method == "POST":
         incomming = request.form
-        prod = incomming['producto'].split(",")
-        cl = int(prod[0])
-        revista = prod[1]
+
+        if incomming['producto1']:
+            prod = incomming['producto1']
+        else:
+            prod = incomming['producto2']
 
         cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID =?", (incomming['cliente'],)) 
-        producto = call_db_two_all_dict(f"SELECT * FROM productos WHERE CL =? AND REVISTA =?", (cl), (revista))
+        producto = call_db_two_all_dict(f"SELECT * FROM productos WHERE CL =? AND REVISTA =?", (prod), (incomming['revista']))
 
         total = int(producto['P_CATALOGO']) * int(incomming['qty'])
         imprenta = "NO"
@@ -251,7 +258,7 @@ def crearVenta():
         flash('La Venta se creo exitosamente!.')
         return redirect(url_for('home'))
     
-    return render_template('ventas/crear_venta.html', title="Crear Venta", clientes=clientes, productos=productos)
+    return render_template('ventas/crear_venta.html', title="Crear Venta", clientes=clientes, productos=productos, revistas=revistas)
 
 
 @app.route('/mostrarVenta/<int:id>', methods=['GET', 'POST'])
@@ -693,6 +700,6 @@ def carteraXlsx():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 

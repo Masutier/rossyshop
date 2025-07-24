@@ -55,14 +55,19 @@
                                     {% else %}
                                         <td></td>
                                     {% endif %}
+                                    <td>0</td>
                                 </tr>
                             {% else %}
                                 <tr>
                                     <td>{{ cartItem['fecha'] }}</td>
                                     <td>{{ cartItem['cliente'] }}</td>
                                     <td>{{ cartItem['notas'] }}</td>
-                                    <td></td>
-                                    <td>{{ "{:,}".format(cartItem['abono']) }}</td>
+                                    <td>0</td>
+                                    {% if cartItem['abono'] %}
+                                        <td>{{ "{:,}".format(cartItem['abono']) }}</td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -75,4 +80,5 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
+
 {% endblock %}

@@ -2,7 +2,7 @@
 {% block title %} {{title}} {% endblock %}
 {% block content %}
 
-<div class="col-lg-11 col-sm-10 mx-auto p-3 mb-5 ">
+<div class="col-lg-11 col-sm-12 mx-auto p-3 mb-5 ">
 
         <div class="col-md-10 mx-auto ">
             <h1>Crear Venta</h1>
@@ -12,7 +12,7 @@
 
             <form action="/crearVenta" method="POST">
                 <div class="row">
-                    <div class="col-3 mb-3">
+                    <div class="col-lg-3 col-sm-7 mx-auto mb-3">
                         <div class="mb-3">
                             <label for="cliente" class="form-label">CLIENTE</label>
                             <select class="form-select" size="4" aria-label="Size 3 select example" name="cliente" required>
@@ -22,12 +22,28 @@
                             </select>
                         </div>
 
+                        <div class="if-big">
+                            <div class="mb-3">
+                                <label for="producto2" class="form-label">CODIGO DEL PRODUCTO</label>
+                                <input type="text" class="form-control" id="producto2" name="producto2">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="revista" class="form-label">REVISTA</label>
+                            <select class="form-select" size="2" aria-label="Size 3 select example" name="revista" required>
+                                {% for revista in revistas %}
+                                    <option value="{{ revista }}">{{ revista }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
                         <div class="mb-3">
                             <label for="qty" class="form-label">CANTIDAD</label>
                             <input type="text" class="form-control" id="qty" name="qty" required>
                         </div>
 
-                        <div class="col-lg-10 row mt-5 mx-auto ">
+                        <div class="col-lg-11 row mt-5 mx-auto ">
                             <div class="col-6 mb-3">
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-warning" onclick="goBack()">Regresar</button>
@@ -42,16 +58,19 @@
                         </div>
                     </div>
 
-                    <div class="col-9">
-                        <div class="mb-3">
-                            <label for="cliente" class="form-label">PRODUCTO</label>
-                            <select class="form-select" size="11" aria-label="Size 3 select example" name="producto" required>
-                                {% for producto in productos %}
-                                <option value="{{ producto['CL'] }},{{ producto['REVISTA'] }}">{{ producto['CL'] }} - {{ producto['REVISTA'] }} - {{ producto['DESCRIPCION'] }} - {{ producto['P_CATALOGO'] }}</option>
-                                {% endfor %}
-                            </select>
+                    <div class="col-lg-8 col-sm-10 mx-auto mb-3">
+                        <div class="if-small">
+                            <div class="mb-3">
+                                <label for="productox" class="form-label">PRODUCTO</label>
+                                <select class="form-select" size="11" aria-label="Size 3 select example" name="producto1">
+                                    {% for producto in productos %}
+                                    <option value="{{ producto['CL'] }}">{{ producto['CL'] }} - {{ producto['REVISTA'] }} - {{ producto['DESCRIPCION'] }} - {{ producto['P_CATALOGO'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </form>
 
