@@ -34,14 +34,14 @@ sudo systemctl status evalinstructor  # Verify it's running
 @app.route("/")
 def home():
     try:
-        allventas = call_db_dict(f"SELECT * FROM ventas ORDER BY FECHA")
-        allabonos = call_db_dict("SELECT * FROM abonos ORDER BY FECHA")
+        allventas = call_db_dict_movim(f"SELECT * FROM ventas ORDER BY FECHA")
+        allabonos = call_db_dict_movim("SELECT * FROM abonos ORDER BY FECHA")
         cartera = []
         totVentas = 0
         totAbonos = 0
 
         for venta in allventas:
-            cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (venta["CLIENTE_ID"],))
+            cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(venta["CLIENTE_ID"]),))
             total = int(venta['P_CATALOGO_PRODUCTO']) * int(venta['CANTIDAD'])
             totVentas += total
 
@@ -55,7 +55,7 @@ def home():
             })
 
         for abono in allabonos:
-            cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (abono["CLIENTE_ID"],))
+            cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(abono["CLIENTE_ID"]),))
             totAbonos += abono['VALOR']
 
             cartera.append({
@@ -67,7 +67,7 @@ def home():
                 'fecha': abono['FECHA'],
             })
 
-        cartera = sorted(cartera, key=lambda x: x['fecha'], reverse=True)
+        #cartera = sorted(cartera, key=lambda x: x['fecha'], reverse=True)
         return render_template('home.html', title="Rossy's Shop", cartera=cartera, totVentas=totVentas, totAbonos=totAbonos)
     except Exception as e:
         startApp()
@@ -86,7 +86,7 @@ def odsLoad():
 
 @app.route('/all_clientes')
 def all_clientes():
-    clientes = call_db_dict("SELECT * FROM clientes")
+    clientes = call_db_dict_clientes("SELECT * FROM clientes")
 
     return render_template('clientes/clientes.html', title="Clientes", clientes=clientes)
 
@@ -97,7 +97,7 @@ def crearCliente():
         incomming = request.form
         deuda = 0
 
-        save_data(f"INSERT INTO clientes (NOMBRE, DIRECCION, BARRIO, TELEFONO, EMPRESA, CLIENTE_DE, COMPRA, DEUDA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (incomming['nombre'], incomming['direccion'], incomming['barrio'], str(incomming['telefono']), incomming['empresa'], incomming['cliente_de'], incomming['compra'], deuda))
+        save_data_clientes(f"INSERT INTO clientes (NOMBRE, DIRECCION, BARRIO, TELEFONO, EMPRESA, CLIENTE_DE, COMPRA, DEUDA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (incomming['nombre'], incomming['direccion'], incomming['barrio'], str(incomming['telefono']), incomming['empresa'], incomming['cliente_de'], incomming['compra'], deuda))
 
         flash('El cliente se creo exitosamente!.')
         return redirect(url_for('all_clientes'))
@@ -107,7 +107,7 @@ def crearCliente():
 
 @app.route('/mostrarCliente/<int:id>', methods=['GET', 'POST'])
 def mostrarCliente(id):
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (id,))
     ventas = call_db_all_dict(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
     abonos = call_db_all_dict(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
     ventasAll = []
@@ -139,7 +139,7 @@ def modificarCliente(id):
         flash('La informacion del cliente se actualizo correctamente!.')
         return redirect(url_for('all_clientes'))
 
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (id,))
     return render_template('clientes/modificar_cliente.html', title="Modificar Cliente", cliente=cliente)
 
 
@@ -152,16 +152,20 @@ def load_clientes():
         filenamex = filename.split('.')
         fileNewName = filenamex[0] + "_" + str(timing) + "." + filenamex[-1] # Rename file adding date
         filepath = os.path.join(DESTINY_PATH, fileNewName)
-        inFile.save(filepath) # save crude file
 
         # Process sheet ventas
-        dataframe = pd.read_excel(filepath, sheet_name='Clientes')
-        dfClientes = clean_file(dataframe)
+        try:
+            dataframe = pd.read_excel(filepath, sheet_name='Clientes')
+            dfClientes = clean_file(dataframe)
+        except Exception as e:
+            flash(f'No existe la Pestanna "Clientes", Error {str(e)}')
+            return render_template('home.html', title="Rossy's Shop")
 
         # loop through the rows using iterrows()
         for index, row in dfClientes.iterrows():
-            save_data(f"INSERT INTO clientes (NOMBRE, DIRECCION, BARRIO, TELEFONO, EMPRESA, CLIENTE_DE, COMPRA, DEUDA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (row['NOMBRE'], row['DIRECCION'], row['BARRIO'], row['TELEFONO'], row['EMPRESA'], row['CLIENTE_DE'], row['COMPRA'], 0))
+            save_data_clientes(f"INSERT INTO clientes (NOMBRE, DIRECCION, BARRIO, TELEFONO, EMPRESA, CLIENTE_DE, COMPRA, DEUDA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (row['NOMBRE'], row['DIRECCION'], row['BARRIO'], row['TELEFONO'], row['EMPRESA'], row['CLIENTE_DE'], row['COMPRA'], 0))
 
+        inFile.save(filepath) # save crude file
         flash('La plantilla se subio exitosamente!.')
         return redirect(url_for('home'))
 
@@ -172,11 +176,11 @@ def load_clientes():
 
 @app.route('/all_ventas')
 def all_ventas():
-    ventas = call_db_dict(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO'")
+    ventas = call_db_dict_movim(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO'")
     ventasAll = []
 
     for ventax in ventas:
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
         total = int(ventax['P_CATALOGO_PRODUCTO']) * int(ventax['CANTIDAD'])
 
         ventasAll.append({
@@ -197,11 +201,11 @@ def all_ventas():
 
 @app.route('/historia_ventas')
 def historia_ventas():
-    ventas = call_db_dict(f"SELECT * FROM ventas")
+    ventas = call_db_dict_movim(f"SELECT * FROM ventas")
     ventasAll = []
 
     for ventax in ventas:
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
         total = int(ventax['P_CATALOGO_PRODUCTO']) * int(ventax['CANTIDAD'])
 
         ventasAll.append({
@@ -223,10 +227,8 @@ def historia_ventas():
 @app.route('/crearVenta', methods=['GET', 'POST'])
 def crearVenta():
     revistas = []
-    sqlQuery = """SELECT ID, NOMBRE FROM clientes"""
-    clientes = call_db_dict(sqlQuery,)
-    sqlQuery = """SELECT * FROM productos ORDER BY CL ASC"""
-    productos = call_db_dict(sqlQuery,)
+    clientes = call_db_dict_clientes(f"SELECT ID, NOMBRE FROM clientes")
+    productos = call_db_dict("SELECT * FROM productos ORDER BY CL ASC")
 
     for prod in productos:
         if prod['REVISTA'] not in revistas:
@@ -240,20 +242,19 @@ def crearVenta():
         else:
             prod = incomming['producto2']
 
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID =?", (incomming['cliente'],)) 
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID =?", (incomming['cliente'],)) 
         producto = call_db_two_all_dict(f"SELECT * FROM productos WHERE CL =? AND REVISTA =?", (prod), (incomming['revista']))
 
         total = int(producto['P_CATALOGO']) * int(incomming['qty'])
         imprenta = "NO"
         fecha_imprenta = datetime.today().date()
 
-        save_data(f"INSERT INTO ventas (CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, REVISTA_PRODUCTO, CAMPANNA_PRODUCTO, CANTIDAD, IMPRENTA, FECHA_IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (incomming['cliente'], producto['CL'], producto['DESCRIPCION'], producto['P_LISTA'], producto['P_CATALOGO'], producto['REVISTA'], producto['CAMPANNA'], int(incomming['qty']), imprenta, fecha_imprenta,))
+        save_data_movim(f"INSERT INTO ventas (CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, REVISTA_PRODUCTO, CAMPANNA_PRODUCTO, CANTIDAD, IMPRENTA, FECHA_IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (incomming['cliente'], producto['CL'], producto['DESCRIPCION'], producto['P_LISTA'], producto['P_CATALOGO'], producto['REVISTA'], producto['CAMPANNA'], int(incomming['qty']), imprenta, fecha_imprenta, ))
 
         deuda = int(cliente['DEUDA']) + int(total)
         fecha = datetime.today().date()
-        sqlquery = """UPDATE clientes SET DEUDA=?, FECHA_ULTIMA_COMPRA=? WHERE id=?"""
         data1 = (deuda, fecha, incomming['cliente'])
-        update_data(sqlquery, data1)
+        update_data_clientes(f"UPDATE clientes SET DEUDA=?, FECHA_ULTIMA_COMPRA=? WHERE id=?", data1)
 
         flash('La Venta se creo exitosamente!.')
         return redirect(url_for('home'))
@@ -263,8 +264,8 @@ def crearVenta():
 
 @app.route('/mostrarVenta/<int:id>', methods=['GET', 'POST'])
 def mostrarVenta(id):
-    venta = call_db_one_dict(f"SELECT * FROM ventas WHERE ID = ?", (id,))
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (int(venta['CLIENTE_ID']),))
+    venta = call_db_one_dict_movim(f"SELECT * FROM ventas WHERE ID = ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(venta['CLIENTE_ID']),))
 
     total = venta['P_CATALOGO_PRODUCTO'] * venta['CANTIDAD']
 
@@ -273,8 +274,8 @@ def mostrarVenta(id):
 
 @app.route('/modificarVenta/<int:id>', methods=['GET', 'POST'])
 def modificarVenta(id):
-    venta = call_db_one_dict(f"SELECT * FROM ventas WHERE ID = ?", (id,))
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID =?", (venta['CLIENTE_ID'],)) 
+    venta = call_db_one_dict_movim(f"SELECT * FROM ventas WHERE ID = ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID =?", (venta['CLIENTE_ID'],)) 
     ventax = {
         'id': venta['ID'],
         'cliente': cliente['NOMBRE'],
@@ -291,18 +292,12 @@ def modificarVenta(id):
         incomming = request.form
         oldValue = (venta['P_CATALOGO_PRODUCTO'] * venta['CANTIDAD'])
         newValue = (int(incomming['ventaVal']) * int(incomming['qty']))
-
         if newValue < oldValue:
             difer = oldValue - newValue
             deuda = int(cliente['DEUDA']) - difer
 
-            sqlquery = """UPDATE ventas SET CANTIDAD=?, P_CATALOGO_PRODUCTO=?, IMPRENTA=? WHERE id=?"""
-            data1 = (incomming['qty'], incomming['ventaVal'], incomming['imprenta'], id)
-            update_data(sqlquery, data1)
-
-            sqlquery = """UPDATE clientes SET DEUDA=? WHERE id=?"""
-            data1 = (deuda, cliente['ID'])
-            update_data(sqlquery, data1)
+            update_data_movim(f"UPDATE ventas SET CANTIDAD=?, P_CATALOGO_PRODUCTO=?, IMPRENTA=? WHERE id=?", (incomming['qty'], incomming['ventaVal'], incomming['imprenta'], id))
+            update_data(f"UPDATE clientes SET DEUDA=? WHERE id=?", (deuda, cliente['ID']))
 
             flash('La informacion de la venta se actualizo correctamente!.')
             return redirect(url_for('all_ventas'))
@@ -311,21 +306,14 @@ def modificarVenta(id):
             difer = newValue - oldValue
             deuda = int(cliente['DEUDA']) + difer
 
-            sqlquery = """UPDATE ventas SET CANTIDAD=?, P_CATALOGO_PRODUCTO=?, IMPRENTA=? WHERE id=?"""
-            data1 = (incomming['qty'], incomming['ventaVal'], incomming['imprenta'], id)
-            update_data(sqlquery, data1)
-
-            sqlquery = """UPDATE clientes SET DEUDA=? WHERE id=?"""
-            data1 = (deuda, cliente['ID'])
-            update_data(sqlquery, data1)
+            update_data_movim(f"UPDATE ventas SET CANTIDAD=?, P_CATALOGO_PRODUCTO=?, IMPRENTA=? WHERE id=?", (incomming['qty'], incomming['ventaVal'], incomming['imprenta'], id))
+            update_data(f"UPDATE clientes SET DEUDA=? WHERE id=?", (deuda, cliente['ID']))
 
             flash('La informacion de la venta se actualizo correctamente!.')
             return redirect(url_for('all_ventas'))
 
         else:
-            sqlquery = """UPDATE ventas SET IMPRENTA=? WHERE id=?"""
-            data1 = (incomming['imprenta'], id)
-            update_data(sqlquery, data1)
+            update_data_movim(f"UPDATE ventas SET IMPRENTA=? WHERE id=?", (incomming['imprenta'], id))
 
             flash('La informacion de la venta se actualizo correctamente!.')
             return redirect(url_for('all_ventas'))
@@ -343,16 +331,26 @@ def load_ventas():
         fileNewName = filenamex[0] + "_" + str(timing) + "." + filenamex[-1] # Rename file adding date
         filepath = os.path.join(DESTINY_PATH, fileNewName)
         inFile.save(filepath) # save crude file
+        
+        productos = call_db_dict(f"SELECT * FROM productos")
 
         # Process sheet ventas
         dataframe = pd.read_excel(filepath, sheet_name='Ventas')
         dfVentas = clean_file(dataframe)
 
-        save_db(dfVentas, "ventas")
+        # loop through the rows using iterrows()
+        for index, row in dfVentas.iterrows():
+            for product in productos:
+                if product['CL'] == row['CL_PRODUCTO']:
+                    DESCRIPCION_PRODUCTO = product['DESCRIPCION']
+                    P_LISTA_PRODUCTO = product['P_LISTA']
+                    P_CATALOGO_PRODUCTO = product['P_CATALOGO']
+                    IMPRENTA = "NO"
+                    save_data_movim(f"INSERT INTO ventas (ID, CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, REVISTA_PRODUCTO, CAMPANNA_PRODUCTO, CANTIDAD, IMPRENTA, FECHA_IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (row['ID'], row['CLIENTE_ID'], row['CL_PRODUCTO'], DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, row['REVISTA_PRODUCTO'], row['CAMPANNA_PRODUCTO'], row['CANTIDAD'], IMPRENTA, row['FECHA_IMPRENTA'],))
 
         flash('La plantilla se subio exitosamente!.')
         return redirect(url_for('home'))
-    
+
     return render_template('ods_load.html', title="ods Load", function="load_ventas")
 
 
@@ -363,7 +361,7 @@ def filtrar(filter):
     ventasAll = []
 
     for ventax in ventas:
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
         total = int(ventax['P_CATALOGO_PRODUCTO']) * int(ventax['CANTIDAD'])
 
         ventasAll.append({
@@ -383,12 +381,24 @@ def filtrar(filter):
     return render_template('ventas/ventas.html', title=title, ventasAll=ventasAll)
 
 
+@app.route('/askDeleteVenta/<int:id>')
+def askDeleteVenta(id):
+    venta = call_db_one_dict_movim(f"SELECT * FROM ventas WHERE ID = ?", (id,))
+    return render_template('ventas/eliminar_venta.html', title="Eliminar Venta", venta=venta)
+
+
+@app.route('/deleteVenta/<int:id>')
+def deleteVenta(id):
+    delete_data_movim(f"DELETE FROM ventas WHERE ID = ?", id)
+    flash('El registro de la venta se elimino exitosamente!.')
+    return redirect(url_for('all_ventas'))
+
+
 # >>>>>>>>> PRODUCTOS >>>>>>>>>
 
 @app.route('/all_productos')
 def all_productos():
-    sqlQuery = f"""SELECT * FROM productos"""
-    productos = call_db_dict(sqlQuery)
+    productos = call_db_dict(f"SELECT * FROM productos")
 
     return render_template('productos/productos.html', title="Productos", productos=productos)
 
@@ -443,14 +453,12 @@ def load_productos():
 
 @app.route('/all_abonos')
 def all_abonos():
-    sqlQuery = f"""SELECT * FROM abonos"""
-    abonos = call_db_dict(sqlQuery)
-    sqlQuery = f"""SELECT * FROM clientes"""
-    clientes = call_db_dict(sqlQuery)
+    abonos = call_db_dict_movim(f"SELECT * FROM abonos")
+    clientes = call_db_dict_clientes(f"SELECT * FROM clientes")
     abonosAll = []
 
     for pagox in abonos:
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (pagox["CLIENTE_ID"],))
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (pagox["CLIENTE_ID"],))
         abonosAll.append({
             'id': pagox["ID"],
             'cliente': cliente['NOMBRE'], 
@@ -465,13 +473,13 @@ def all_abonos():
 @app.route('/crearAbono', methods=['GET', 'POST'])
 def crearAbono():
     sqlQuery = """SELECT ID, NOMBRE FROM clientes"""
-    clientes = call_db_dict(sqlQuery,)
+    clientes = call_db_dict_clientes(sqlQuery,)
 
     if request.method == "POST":
         incomming = request.form
 
-        save_data(f"INSERT INTO abonos (CLIENTE_ID, NOTAS, VALOR) VALUES (?, ?, ?)", (incomming['cliente'], incomming['notas'], incomming['valor']))
-        cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (incomming['cliente'],))
+        save_data_movim(f"INSERT INTO abonos (CLIENTE_ID, NOTAS, VALOR) VALUES (?, ?, ?)", (incomming['cliente'], incomming['notas'], incomming['valor']))
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (incomming['cliente'],))
 
         deuda = int(cliente['DEUDA']) - int(incomming['valor'])
         fecha = datetime.today().date()
@@ -487,26 +495,39 @@ def crearAbono():
 
 @app.route('/mostrarAbono/<int:id>', methods=['GET', 'POST'])
 def mostrarAbono(id):
-    abono = call_db_one_dict(f"SELECT * FROM abonos WHERE ID = ?", (id,))
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (int(abono['CLIENTE_ID']),))
+    abono = call_db_one_dict_movim(f"SELECT * FROM abonos WHERE ID = ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(abono['CLIENTE_ID']),))
 
     return render_template('abonos/abono.html', title="Mostrar Abono", abono=abono, cliente=cliente)
 
 
 @app.route('/modificarAbono/<int:id>', methods=['GET', 'POST'])
 def modificarAbono(id):
-    abono = call_db_one_dict(f"SELECT * FROM abonos WHERE ID= ?", (id,))
-    cliente = call_db_one_dict(f"SELECT * FROM clientes WHERE ID= ?", (int(abono['CLIENTE_ID']),))
+    abono = call_db_one_dict_movim(f"SELECT * FROM abonos WHERE ID= ?", (id,))
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID= ?", (int(abono['CLIENTE_ID']),))
 
     if request.method == "POST":
         incomming = request.form
         sqlquery = """UPDATE abonos SET VALOR= ?, NOTAS= ? WHERE id= ?"""
         data1 = (incomming['valor'], incomming['notas'], id)
-        update_data(sqlquery, data1)
+        update_data_movim(sqlquery, data1)
         flash('El abono se actualizo exitosamente!.')
         return redirect(url_for('all_abonos'))
     
     return render_template('abonos/modificar_abono.html', title="Crear Abono", abono=abono, cliente=cliente)
+
+
+@app.route('/askDeleteAbono/<int:id>')
+def askDeleteAbono(id):
+    abono = call_db_one_dict_movim(f"SELECT * FROM abonos WHERE ID = ?", (id,))
+    return render_template('abonos/eliminar_abono.html', title="Eliminar Abono", abono=abono)
+
+
+@app.route('/deleteAbono/<int:id>')
+def deleteAbono(id):
+    delete_data_movim(f"DELETE FROM abonos WHERE ID = ?", id)
+    flash('El registro del abono se elimino exitosamente!.')
+    return redirect(url_for('all_ventas'))
 
 
 # >>>>>>>>> GENERAR RECIBOS >>>>>>>>>
@@ -534,7 +555,7 @@ def cobrosXlsx(filter):
 
     if ventasAll:
         for venta in ventasAll:
-            clientex = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (venta["CLIENTE_ID"],))
+            clientex = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (venta["CLIENTE_ID"],))
 
             if {'nombre':clientex['NOMBRE'], 'deuda':clientex['DEUDA']} not in clientes:
                 clientes.append({'nombre':clientex['NOMBRE'], 'deuda':clientex['DEUDA']})
@@ -550,9 +571,7 @@ def cobrosXlsx(filter):
                 'total': total,
             })
 
-            # sqlquery = """UPDATE ventas SET IMPRENTA=? WHERE id=?"""
-            # data1 = ("SI", venta['ID'])
-            # update_data(sqlquery, data1)
+            update_data_movim(f"UPDATE ventas SET IMPRENTA=? WHERE id=?", ("SI", venta['ID']))
             createfile = "Imprimir" + "_" + filter + "_"
             
         reporteCobrosXlsx(clientes, ventas, createfile)
@@ -572,12 +591,12 @@ def delete_recibo(file):
 
 @app.route('/cobrosPdf')
 def cobrosPdf():
-    ventasAll = call_db_dict(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO'")
+    ventasAll = call_db_dict_movim(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO'")
     client = []
     ventas = []
 
     for venta in ventasAll:
-        clientex = call_db_one_dict(f"SELECT * FROM clientes WHERE ID = ?", (venta["CLIENTE_ID"],))
+        clientex = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (venta["CLIENTE_ID"],))
 
         if clientex['NOMBRE'] not in client:
             client.append(clientex['NOMBRE'])
@@ -600,9 +619,9 @@ def cobrosPdf():
 
 @app.route('/cartera')
 def cartera():
-    clientes = call_db_dict("SELECT * FROM clientes")
-    ventas = call_db_dict("SELECT * FROM clientes")
-    abonos = call_db_dict("SELECT * FROM clientes")
+    clientes = call_db_dict_clientes("SELECT * FROM clientes")
+    ventas = call_db_dict_movim("SELECT * FROM ventas")
+    abonos = call_db_dict_movim("SELECT * FROM abonos")
     allnames = []
     cartera = []
     totcartera = []
@@ -645,9 +664,9 @@ def cartera():
 
 @app.route('/carteraXlsx')
 def carteraXlsx():
-    clientes = call_db_dict("SELECT * FROM clientes")
-    ventas = call_db_dict("SELECT * FROM clientes")
-    abonos = call_db_dict("SELECT * FROM clientes")
+    clientes = call_db_dict_clientes("SELECT * FROM clientes")
+    ventas = call_db_dict_movim("SELECT * FROM ventas")
+    abonos = call_db_dict_movim("SELECT * FROM abonos")
     allnames = []
     cartera = []
     totcartera = []

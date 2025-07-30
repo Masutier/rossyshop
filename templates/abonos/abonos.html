@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'layout_dt.html' %}
 {% block title %} {{title}} {% endblock %}
 {% block content %}
 
@@ -21,8 +21,8 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-striped" style="width:100%">
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
                             <th scope="col">_Id</th>
@@ -58,5 +58,7 @@
 
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
 
 {% endblock %}

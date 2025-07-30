@@ -22,7 +22,7 @@
                             <a class="btn btn-success btm-sm" href="{{ url_for('modificarVenta', id=venta['id']) }}" aria-disabled="true"><h5 id="venta">Modificar</h5></a>
                         </div>
                         <div class="col-5 mb-3">
-                            <a class="btn btn-danger btm-sm" href="" aria-disabled="true"><h5 id="delete">Eliminar</h5></a>
+                            <a class="btn btn-danger btm-sm" href="{{ url_for('askDeleteVenta', id=venta['id']) }}" aria-disabled="true"><h5 id="delete">Eliminar</h5></a>
                         </div>
                     </div>
                     <div class="col-6 mx-auto">

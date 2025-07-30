@@ -1,0 +1,41 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-md-4 mt-5 mx-auto">
+    <div class="col-md">
+        <div class="card text-center txtcol29 mb-3" id="orders-delivered">
+            <div class="card-header">
+                <h2 class="card-title">Eliminar Venta</h2>
+            </div>
+
+            <div class="card-body">
+                <div class="col-lg-11 row mb-3 mx-auto ">
+                    <p >Estas segura de querer eliminar la Venta? </p>
+                </div>
+
+                <div class="col-lg-11 row mx-auto ">
+                    <div class="col-6 mb-3">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <form action="" method="POST">
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-danger" href="{{ url_for('deleteVenta', id=venta['id']) }}" aria-disabled="true">Eliminar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock content %}

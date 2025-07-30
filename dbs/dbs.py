@@ -7,6 +7,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 today = str(datetime.today().date())
 today = today.replace("-", "_")
 db_name = "rossy_acc.db"
+db_name_clientes = "rossy_clientes.db"
+db_name_movim = "rossy_ventas.db"
 
 
 def createDB():
@@ -21,13 +23,6 @@ def db_conn():
     return conn
 
 
-def call_db(sqlQuery):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dbData = conn.execute(sqlQuery,).fetchall()
-    conn.close()
-    return dbData
-
-
 def call_db_dict(sqlQuery):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name))
     conn.row_factory = sql3.Row
@@ -36,24 +31,10 @@ def call_db_dict(sqlQuery):
     return dbData
 
 
-def call_db_one(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dbData = conn.execute(sqlQuery, data1,).fetchone() # SEE data1 as a tuple
-    conn.close()
-    return dbData
-
-
 def call_db_one_dict(sqlQuery, data1):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name))
     conn.row_factory = sql3.Row
-    dbData = conn.execute(sqlQuery, data1).fetchone() # SEE data1 as a tuple
-    conn.close()
-    return dbData
-
-
-def call_db_all(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dbData = conn.execute(sqlQuery, data1).fetchall()
+    dbData = conn.execute(sqlQuery, data1).fetchone()
     conn.close()
     return dbData
 
@@ -66,29 +47,10 @@ def call_db_all_dict(sqlQuery, data1):
     return dbData
 
 
-def save_db(dataframe, table):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dataframe.to_sql(name=table, con=conn, if_exists="replace", index=False)
-    conn.close()
-
-
-def save_venta(dataframe, table):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dataframe.to_sql(name=table, con=conn, if_exists="append", index=False)
-    conn.close()
-
-
 def call_db_two_all_dict(sqlQuery, data1, data2):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name))
     conn.row_factory = sql3.Row
     dbData = conn.execute(sqlQuery, (data1, data2)).fetchone()
-    conn.close()
-    return dbData
-
-
-def call_db_two_all(sqlQuery, data1, data2):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    dbData = conn.execute(sqlQuery, (data1, data2)).fetchall()
     conn.close()
     return dbData
 
@@ -101,14 +63,6 @@ def save_data(sqlQuery, data1):
     conn.close()
 
 
-def update_db(sqlQuery, data1, data2):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    cur = conn.cursor()
-    cur.execute(sqlQuery, (data1, data2))
-    conn.commit()
-    conn.close()
-
-
 def update_data(sqlQuery, data1):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name))
     cur = conn.cursor()
@@ -117,17 +71,102 @@ def update_data(sqlQuery, data1):
     conn.close()
 
 
-def delete_two_db(sqlQuery, data1, data2):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
-    cur = conn.cursor()
-    cur.execute(sqlQuery, (data1, data2))
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<< CLIENTES >>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+def call_db_dict_clientes(sqlQuery):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_clientes))
+    conn.row_factory = sql3.Row
+    dbData = conn.execute(sqlQuery).fetchall()
+    conn.close()
+    return dbData
+
+
+def save_data_clientes(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_clientes))
+    cursor = conn.cursor()
+    cursor.execute(sqlQuery, data1)
     conn.commit()
     conn.close()
 
 
-# Crea la tabla clientes
+def call_db_one_dict_clientes(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_clientes))
+    conn.row_factory = sql3.Row
+    dbData = conn.execute(sqlQuery, data1).fetchone()
+    conn.close()
+    return dbData
+
+
+def update_data_clientes(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_clientes))
+    cur = conn.cursor()
+    cur.execute(sqlQuery, data1)
+    conn.commit()
+    conn.close()
+
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<< MOVIMIENTOS >>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+def call_db_dict_movim(sqlQuery):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
+    conn.row_factory = sql3.Row
+    dbData = conn.execute(sqlQuery).fetchall()
+    conn.close()
+    return dbData
+
+
+def save_data_movim(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
+    cursor = conn.cursor()
+    cursor.execute(sqlQuery, data1)
+    conn.commit()
+    conn.close()
+
+
+def call_db_one_dict_movim(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
+    conn.row_factory = sql3.Row
+    dbData = conn.execute(sqlQuery, data1).fetchone()
+    conn.close()
+    return dbData
+
+
+def update_data_movim(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
+    cur = conn.cursor()
+    cur.execute(sqlQuery, data1)
+    conn.commit()
+    conn.close()
+
+
+def delete_data_movim(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    cur = conn.cursor()
+    cur.execute(sqlQuery, (data1,))
+    conn.commit()
+    conn.close()
+
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREATE TABLES >>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 def createTable(sqlQuery):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    cur=conn.cursor()
+    cur.execute(sqlQuery,)
+    conn.commit()
+    conn.close()
+
+
+def createTableClientes(sqlQuery):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_clientes))
+    cur=conn.cursor()
+    cur.execute(sqlQuery,)
+    conn.commit()
+    conn.close()
+
+
+def createTableMovim(sqlQuery):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
     cur=conn.cursor()
     cur.execute(sqlQuery,)
     conn.commit()
@@ -149,20 +188,8 @@ def startApp():
             FECHA_ULTIMO_ABONO DATETIME,
             FECHA DATETIME DEFAULT CURRENT_TIMESTAMP
         )"""
-    createTable(clientesQuery)
+    createTableClientes(clientesQuery)
 
-    productosQuery = f"""CREATE TABLE productos (
-            ID INTEGER PRIMARY KEY NOT NULL,
-            CL INTEGER,
-            DESCRIPCION TEXT,
-            P_LISTA INTEGER,
-            P_CATALOGO INTEGER,
-            UBICACION TEXT,
-            REVISTA TEXT,
-            CAMPANNA TEXT,
-            FECHA DATETIME DEFAULT CURRENT_TIMESTAMP
-        )"""
-    createTable(productosQuery)
 
     ventasQuery = f"""CREATE TABLE IF NOT EXISTS ventas (
             ID INTEGER PRIMARY KEY NOT NULL,
@@ -179,7 +206,8 @@ def startApp():
             FECHA DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(CLIENTE_ID) REFERENCES clientes(ID)
         )"""
-    createTable(ventasQuery)
+    createTableMovim(ventasQuery)
+
 
     abonosQuery = f"""CREATE TABLE abonos (
             ID INTEGER PRIMARY KEY NOT NULL,
@@ -189,4 +217,19 @@ def startApp():
             FECHA DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(CLIENTE_ID) REFERENCES clientes(ID)
         )"""
-    createTable(abonosQuery)
+    createTableMovim(abonosQuery)
+
+
+    productosQuery = f"""CREATE TABLE productos (
+            ID INTEGER PRIMARY KEY NOT NULL,
+            CL INTEGER,
+            DESCRIPCION TEXT,
+            P_LISTA INTEGER,
+            P_CATALOGO INTEGER,
+            UBICACION TEXT,
+            REVISTA TEXT,
+            CAMPANNA TEXT,
+            FECHA DATETIME DEFAULT CURRENT_TIMESTAMP
+        )"""
+    createTable(productosQuery)
+
