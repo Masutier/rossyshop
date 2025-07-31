@@ -9,31 +9,42 @@
 
         <!-- *************** -->
 
-        <div class="col-9 mx-auto mt-3 ">
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto mt-3">
+            <div class="col-lg-6 col-sm-10 mb-5 mx-auto c">
+                <h1>Recibos en disco local</h1>
+            </div>
+
             {% if catalogList %}
+                <div class="row row-cols-1 row-cols-md-3 g-4">
 
-                <div class="col-11 mx-auto mt-3 mb-5 c">
-                    <h4>Recibos en disco local</h4>
-                </div>
-
-                <div class="col-12 row mx-auto mt-3 mb-5 c">
                     {% for cat in catalogList %}
-                        <div class="col-4 mx-auto p-3">
-                            <a class="btn btn-warning" href="{{ url_for('static', filename='docs/' + cat) }}">{{ cat }}</a>
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ cat }}</h6>
+
+                                    <div class="col-lg-10 mx-auto">
+                                        <div class="d-grid gap-2 mb-2">
+                                            <a class="btn btn-warning" href="{{ url_for('static', filename='docs/' + cat) }}">{{ cat }}</a>
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <a class="btn btn-danger" href="{{ url_for('delete_recibo', file=cat) }}">{{ cat }}</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
-                </div>
 
-                <div class="col-12 row mx-auto mt-3 mb-5 c">
-                    {% for cat in catalogList %}
-                        <div class="col-4 mx-auto p-3">
-                            <a class="btn btn-danger" href="{{ url_for('delete_recibo', file=cat) }}">{{ cat }}</a>
-                        </div>
-                    {% endfor %}
                 </div>
-
             {% endif %}
+
         </div>
+
     </div>
 </div>
 

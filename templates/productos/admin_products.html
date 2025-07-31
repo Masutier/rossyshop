@@ -1,0 +1,108 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-12 mx-auto p-4 mb-5">
+    <div class="row">
+
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto mt-3">
+
+            <div class="row mb-5">
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <h1>Administrar Productos</h1>
+                </div>
+
+                <div class="col-lg-6 col-sm-10 mx-auto c">
+                    <a class="btn btn-success mb-3" href="{{ url_for('load_productos') }}">Subir Lista Productos</a>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card h-100">
+
+                        <div class="card-body">
+                            <h5 class="card-title">NOVAVENTA</h5>
+                            <h3 class="card-text c">{{ novaQty }} </h3>
+
+                            <div class="col-lg-10 mx-auto">
+                                <div class="d-grid gap-2 mb-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Eliminar Lista Previa</a>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Add Nueva Lista</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">LEONIZA</h5>
+                            <h3 class="card-text c">{{ leonQty }} </h3>
+                            <div class="col-lg-10 mx-auto">
+                                <div class="d-grid gap-2 mb-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Eliminar Lista Previa</a>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Add Nueva Lista</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">MODA INTERNACIONAL</h5>
+                            <h3 class="card-text c">{{ modaQty }} </h3>
+                            <div class="col-lg-10 mx-auto">
+                                <div class="d-grid gap-2 mb-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Eliminar Lista Previa</a>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Add Nueva Lista</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">INVENTARIO</h5>
+                            <h3 class="card-text c">{{ inventQty }} </h3>
+                            <div class="col-lg-10 mx-auto">
+                                <div class="d-grid gap-2 mb-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Eliminar Lista Previa</a>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-success btm-sm" href="" aria-disabled="true">Add Nueva Lista</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

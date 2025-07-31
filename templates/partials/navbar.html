@@ -19,14 +19,14 @@
                     <hr>
                     <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_ventas') }}">Ventas</a></li>
                     <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_abonos') }}">Abonos</a></li>
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_clientes') }}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_productos') }}">Productos</a></li>
-                    
-                    
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('load_ventas') }}">Subir Lista Ventas</a></li>
                     <hr>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_productos') }}">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('adminProducts') }}">Administrar Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('load_productos') }}">Subir Lista Productos</a></li>
+                    <hr>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('all_clientes') }}">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('load_clientes') }}">Subir y Procesar Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('load_productos') }}">Subir y Procesar Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('load_ventas') }}">Subir y Procesar Ventas</a></li>
                     <hr>
                     <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ url_for('static', filename='docs/Plantilla_Rossy.ods') }}">Plantilla Ventas .ods</a></li>
                 </ul>

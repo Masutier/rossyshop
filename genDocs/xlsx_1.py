@@ -4,8 +4,8 @@ from flask import send_file
 from datetime import datetime, date
 from openpyxl import Workbook, load_workbook
 
-DESTINY_PATH = "static/docs/"
-
+DESTINY_PATH = "/home/gabriel/Downloads/rossy app/recibos/"
+DOWNLOAD_PATH = "/home/gabriel/Downloads/rossy app/recibos/"
 
 def reporteCobrosXlsx(clientes, ventas, createfile):
     formatted_date = datetime.today().date()

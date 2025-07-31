@@ -10,27 +10,23 @@
         <!-- *************** -->
 
         <div class="col-10 mx-auto mt-3">
-
-            <div class="row mb-3">
-                <div class="col-lg-6 col-sm-10 mx-auto c">
-                    <h1>Productos</h1>
-                </div>
-
-                <div class="col-lg-6 col-sm-10 mx-auto c">
-                    <a class="btn btn-success mb-3" href="{{ url_for('crearProducto') }}">Crear Producto</a>
-                </div>
+            <div class="col-lg-6 col-sm-10 mx-auto c">
+                <a class="btn btn-primary btn-sm mb-3" href="{{ url_for('all_productos') }}"><h1>Productos</h1></a>
             </div>
+
+            {% include 'partials/navbarProducts.html' %}
 
             <div class="table-responsive p-4 backs">
                 <table id="codeCiiu" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th scope="col">_Id</th>
+                            <th scope="col">Id</th>
                             <th scope="col">CL</th>
                             <th scope="col">DESCRIPCION</th>
                             <th scope="col">P_CATALOGO</th>
                             <th scope="col">UBICACION</th>
                             <th scope="col">REVISTA</th>
+                            <th scope="col">CAMPANNA</th>
                             <th scope="col">FECHA</th>
                         </tr>
                     </thead>
@@ -47,6 +43,7 @@
                             {% endif %}
                             <td>{{ producto['UBICACION'] }}</td>
                             <td>{{ producto['REVISTA'] }}</td>
+                            <td>{{ producto['CAMPANNA'] }}</td>
                             <td>{{ producto['FECHA'] }}</td>
                         </tr>
                         {% endfor %}

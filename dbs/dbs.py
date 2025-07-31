@@ -6,25 +6,25 @@ from flask import flash, session, redirect
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 today = str(datetime.today().date())
 today = today.replace("-", "_")
-db_name = "rossy_acc.db"
+db_name_product = "rossy_products.db"
 db_name_clientes = "rossy_clientes.db"
 db_name_movim = "rossy_ventas.db"
 
 
 def createDB():
-    conn=sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn=sql3.connect(os.path.join(BASE_DIR, db_name_product))
     conn.commit()
     conn.close()
 
 
 def db_conn():
-    conn = sql3.connect('dbs/' + db_name)
+    conn = sql3.connect('dbs/' + db_name_product)
     conn.row_factory = sql3.Row
     return conn
 
 
 def call_db_dict(sqlQuery):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     conn.row_factory = sql3.Row
     dbData = conn.execute(sqlQuery).fetchall()
     conn.close()
@@ -32,7 +32,7 @@ def call_db_dict(sqlQuery):
 
 
 def call_db_one_dict(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     conn.row_factory = sql3.Row
     dbData = conn.execute(sqlQuery, data1).fetchone()
     conn.close()
@@ -40,7 +40,7 @@ def call_db_one_dict(sqlQuery, data1):
 
 
 def call_db_all_dict(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     conn.row_factory = sql3.Row
     dbData = conn.execute(sqlQuery, data1).fetchall()
     conn.close()
@@ -48,7 +48,7 @@ def call_db_all_dict(sqlQuery, data1):
 
 
 def call_db_two_all_dict(sqlQuery, data1, data2):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     conn.row_factory = sql3.Row
     dbData = conn.execute(sqlQuery, (data1, data2)).fetchone()
     conn.close()
@@ -56,7 +56,7 @@ def call_db_two_all_dict(sqlQuery, data1, data2):
 
 
 def save_data(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     cursor = conn.cursor()
     cursor.execute(sqlQuery, data1)
     conn.commit()
@@ -64,7 +64,7 @@ def save_data(sqlQuery, data1):
 
 
 def update_data(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     cur = conn.cursor()
     cur.execute(sqlQuery, data1)
     conn.commit()
@@ -131,6 +131,14 @@ def call_db_one_dict_movim(sqlQuery, data1):
     return dbData
 
 
+def call_db_all_dict_movim(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
+    conn.row_factory = sql3.Row
+    dbData = conn.execute(sqlQuery, data1).fetchall()
+    conn.close()
+    return dbData
+
+
 def update_data_movim(sqlQuery, data1):
     conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
     cur = conn.cursor()
@@ -140,7 +148,7 @@ def update_data_movim(sqlQuery, data1):
 
 
 def delete_data_movim(sqlQuery, data1):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_movim))
     cur = conn.cursor()
     cur.execute(sqlQuery, (data1,))
     conn.commit()
@@ -149,8 +157,8 @@ def delete_data_movim(sqlQuery, data1):
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<< CREATE TABLES >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-def createTable(sqlQuery):
-    conn = sql3.connect(os.path.join(BASE_DIR, db_name))
+def createTableProducts(sqlQuery):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
     cur=conn.cursor()
     cur.execute(sqlQuery,)
     conn.commit()
@@ -231,5 +239,5 @@ def startApp():
             CAMPANNA TEXT,
             FECHA DATETIME DEFAULT CURRENT_TIMESTAMP
         )"""
-    createTable(productosQuery)
+    createTableProducts(productosQuery)
 

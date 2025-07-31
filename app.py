@@ -20,9 +20,9 @@ app.config['SECRET_KEY'] = config['SECRET_KEY']
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 formatted_date = datetime.today().date()
 timing = formatted_date.strftime("%b_%d_%Y")
-origen_path = "/home/gabriel/Downloads/"
-DESTINY_PATH = "/home/gabriel/Documents/catalogRossy/accounts/"
-DOWNLOAD_PATH = "static/docs/"
+origen_path = "/home/gabriel/Downloads/rossy app/recibos/"
+DESTINY_PATH = "dbs/records/"
+DOWNLOAD_PATH = "/home/gabriel/Downloads/rossy app/recibos/"
 
 """
 sudo systemctl daemon-reload
@@ -108,8 +108,8 @@ def crearCliente():
 @app.route('/mostrarCliente/<int:id>', methods=['GET', 'POST'])
 def mostrarCliente(id):
     cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (id,))
-    ventas = call_db_all_dict(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
-    abonos = call_db_all_dict(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
+    ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
+    abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (id,))
     ventasAll = []
 
     for ventax in ventas:
@@ -134,7 +134,7 @@ def modificarCliente(id):
 
         sqlquery = """UPDATE clientes SET NOMBRE=?, DIRECCION=?, BARRIO=?, TELEFONO=?, EMPRESA=?, CLIENTE_DE=?, COMPRA=? WHERE id=?"""
         data1 = (incomming['nombre'], incomming['direccion'], incomming['barrio'], incomming['telefono'], incomming['empresa'], incomming['cliente_de'], incomming['compra'], id)
-        update_data(sqlquery, data1)
+        update_data_clientes(sqlquery, data1)
 
         flash('La informacion del cliente se actualizo correctamente!.')
         return redirect(url_for('all_clientes'))
@@ -148,14 +148,8 @@ def load_clientes():
     if request.method == "POST":
         inFile = request.files['plantillaVentas']
 
-        filename = secure_filename(inFile.filename)
-        filenamex = filename.split('.')
-        fileNewName = filenamex[0] + "_" + str(timing) + "." + filenamex[-1] # Rename file adding date
-        filepath = os.path.join(DESTINY_PATH, fileNewName)
-
-        # Process sheet ventas
         try:
-            dataframe = pd.read_excel(filepath, sheet_name='Clientes')
+            dataframe = pd.read_excel(inFile, sheet_name='Clientes')
             dfClientes = clean_file(dataframe)
         except Exception as e:
             flash(f'No existe la Pestanna "Clientes", Error {str(e)}')
@@ -165,7 +159,6 @@ def load_clientes():
         for index, row in dfClientes.iterrows():
             save_data_clientes(f"INSERT INTO clientes (NOMBRE, DIRECCION, BARRIO, TELEFONO, EMPRESA, CLIENTE_DE, COMPRA, DEUDA) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (row['NOMBRE'], row['DIRECCION'], row['BARRIO'], row['TELEFONO'], row['EMPRESA'], row['CLIENTE_DE'], row['COMPRA'], 0))
 
-        inFile.save(filepath) # save crude file
         flash('La plantilla se subio exitosamente!.')
         return redirect(url_for('home'))
 
@@ -326,19 +319,15 @@ def load_ventas():
     if request.method == "POST":
         inFile = request.files['plantillaVentas']
 
-        filename = secure_filename(inFile.filename)
-        filenamex = filename.split('.')
-        fileNewName = filenamex[0] + "_" + str(timing) + "." + filenamex[-1] # Rename file adding date
-        filepath = os.path.join(DESTINY_PATH, fileNewName)
-        inFile.save(filepath) # save crude file
-        
-        productos = call_db_dict(f"SELECT * FROM productos")
-
-        # Process sheet ventas
-        dataframe = pd.read_excel(filepath, sheet_name='Ventas')
+        dataframe = pd.read_excel(inFile, sheet_name='Ventas')
         dfVentas = clean_file(dataframe)
 
-        # loop through the rows using iterrows()
+        try:
+            productos = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA =? AND CAMPANNA = ?", (dfVentas.at[0, 'REVISTA_PRODUCTO'], dfVentas.at[0, 'CAMPANNA_PRODUCTO']))
+        except:
+            flash("No se encontraron registros de Productos")
+            return redirect(url_for('home'))
+
         for index, row in dfVentas.iterrows():
             for product in productos:
                 if product['CL'] == row['CL_PRODUCTO']:
@@ -346,7 +335,7 @@ def load_ventas():
                     P_LISTA_PRODUCTO = product['P_LISTA']
                     P_CATALOGO_PRODUCTO = product['P_CATALOGO']
                     IMPRENTA = "NO"
-                    save_data_movim(f"INSERT INTO ventas (ID, CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, REVISTA_PRODUCTO, CAMPANNA_PRODUCTO, CANTIDAD, IMPRENTA, FECHA_IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (row['ID'], row['CLIENTE_ID'], row['CL_PRODUCTO'], DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, row['REVISTA_PRODUCTO'], row['CAMPANNA_PRODUCTO'], row['CANTIDAD'], IMPRENTA, row['FECHA_IMPRENTA'],))
+                    save_data_movim(f"INSERT INTO ventas (CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, REVISTA_PRODUCTO, CAMPANNA_PRODUCTO, CANTIDAD, IMPRENTA, FECHA_IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (row['CLIENTE_ID'], row['CL_PRODUCTO'], DESCRIPCION_PRODUCTO, P_LISTA_PRODUCTO, P_CATALOGO_PRODUCTO, row['REVISTA_PRODUCTO'], row['CAMPANNA_PRODUCTO'], row['CANTIDAD'], IMPRENTA, row['FECHA_IMPRENTA'],))
 
         flash('La plantilla se subio exitosamente!.')
         return redirect(url_for('home'))
@@ -357,7 +346,7 @@ def load_ventas():
 @app.route('/filtrar/<filter>')
 def filtrar(filter):
     revista = filter.upper()
-    ventas = call_db_all_dict(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO' AND REVISTA_PRODUCTO = ?", (revista,))
+    ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO' AND REVISTA_PRODUCTO = ?", (revista,))
     ventasAll = []
 
     for ventax in ventas:
@@ -417,11 +406,17 @@ def crearProducto():
                 flash('El Producto YA EXISTE pero es diferente!.')
                 return redirect(url_for('all_productos'))
             else:
-                save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_CATALOGO, UBICACION, REVISTA) VALUES (?, ?, ?, ?, ?)", (int(incomming['cl']), incomming['descripcion'], int(incomming['pcatalogo']), incomming['ubica'], incomming['revista']))
+                save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_CATALOGO, UBICACION, REVISTA, CAMPANNA) VALUES (?, ?, ?, ?, ?, ?)", (int(incomming['cl']), incomming['descripcion'], int(incomming['pcatalogo']), incomming['ubica'], incomming['revista'], incomming['CAMPANNA']))
                 flash('El Producto se creo exitosamente!.')
                 return redirect(url_for('all_productos'))
     
     return render_template('productos/crear_producto.html', title="Crear Producto")
+
+
+# Mostrar Producto
+
+
+# Modificar Producto
 
 
 @app.route('/load_productos', methods=['GET', 'POST'])
@@ -429,17 +424,9 @@ def load_productos():
     if request.method == "POST":
         inFile = request.files['plantillaVentas']
 
-        filename = secure_filename(inFile.filename)
-        filenamex = filename.split('.')
-        fileNewName = filenamex[0] + "_" + str(timing) + "." + filenamex[-1] # Rename file adding date
-        filepath = os.path.join(DESTINY_PATH, fileNewName)
-        inFile.save(filepath) # save crude file
-
-        # Process sheet ventas
-        dataframe = pd.read_excel(filepath, sheet_name='Productos')
+        dataframe = pd.read_excel(inFile, sheet_name='Productos')
         dfProductos = clean_file(dataframe)
 
-        # loop through the rows using iterrows()
         for index, row in dfProductos.iterrows():
             save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_LISTA, P_CATALOGO, UBICACION, REVISTA, CAMPANNA) VALUES (?, ?, ?, ?, ?, ?, ?)", (row['CL'], row['DESCRIPCION'], row['P_LISTA'], row['P_CATALOGO'], row['UBICACION'], row['REVISTA'], row['CAMPANNA']))
 
@@ -447,6 +434,61 @@ def load_productos():
         return redirect(url_for('home'))
     
     return render_template('ods_load.html', title="ods Load", function="load_productos")
+
+
+@app.route('/filtrarProd/<filter>')
+def filtrarProd(filter):
+    revista = filter.upper()
+    productosAll = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", (revista,))
+    productos = []
+
+    for productx in productosAll:
+        productos.append({
+            'ID': productx["ID"],
+            'CL': productx["CL"],
+            'DESCRIPCION': productx['DESCRIPCION'], 
+            'P_CATALOGO': productx['P_CATALOGO'],
+            'UBICACION': productx['UBICACION'],
+            'REVISTA': productx['REVISTA'],
+            'CAMPANNA': productx['CAMPANNA'],
+            'FECHA': productx['FECHA'],
+        })
+        
+    title = "Productos " + filter
+    return render_template('productos/productos.html', title=title, productos=productos)
+
+
+@app.route('/adminProducts')
+def adminProducts():
+    novaQty = 0
+    leonQty = 0
+    modaQty = 0
+    inventQty = 0
+
+    nova = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('NOVAVENTA',))
+    for item in nova:
+        novaQty += 1
+
+    leon = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('LEONIZA',))
+    for item in leon:
+        leonQty += 1
+
+    moda = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('MODA_INT',))
+    for item in moda:
+        modaQty += 1
+
+    invent = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('INVENTARIO',))
+    for item in invent:
+        inventQty += 1
+    
+    print(novaQty)
+    print(leonQty)
+    print(modaQty)
+    print(inventQty)
+
+
+    title = "Administracion Productos"
+    return render_template('productos/admin_products.html', title=title, novaQty=novaQty, leonQty=leonQty, modaQty=modaQty, inventQty=inventQty)
 
 
 # >>>>>>>>> ABONOS >>>>>>>>>
@@ -508,9 +550,7 @@ def modificarAbono(id):
 
     if request.method == "POST":
         incomming = request.form
-        sqlquery = """UPDATE abonos SET VALOR= ?, NOTAS= ? WHERE id= ?"""
-        data1 = (incomming['valor'], incomming['notas'], id)
-        update_data_movim(sqlquery, data1)
+        update_data_movim("UPDATE abonos SET VALOR= ?, NOTAS= ? WHERE id= ?", (incomming['valor'], incomming['notas'], id))
         flash('El abono se actualizo exitosamente!.')
         return redirect(url_for('all_abonos'))
     
@@ -549,7 +589,8 @@ def registrosExcel():
 @app.route('/cobrosXlsx/<filter>')
 def cobrosXlsx(filter):
     revista = filter.upper()
-    ventasAll = call_db_all_dict(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO' AND REVISTA_PRODUCTO = ?", (revista,))
+    print('revista', revista)
+    ventasAll = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE IMPRENTA = 'NO' AND REVISTA_PRODUCTO = ?", (revista,))
     clientes = []
     ventas = []
 
@@ -562,6 +603,7 @@ def cobrosXlsx(filter):
 
             cant = venta['CANTIDAD']
             total = int(venta['P_CATALOGO_PRODUCTO']) * int(venta['CANTIDAD'])
+            campanna = venta['CAMPANNA_PRODUCTO']
             ventas.append({
                 'id': clientex['ID'], 
                 'cliente': clientex['NOMBRE'], 
@@ -571,8 +613,8 @@ def cobrosXlsx(filter):
                 'total': total,
             })
 
+            createfile = "Reporte" + "_" + filter + "_" + campanna + "_"
             update_data_movim(f"UPDATE ventas SET IMPRENTA=? WHERE id=?", ("SI", venta['ID']))
-            createfile = "Imprimir" + "_" + filter + "_"
             
         reporteCobrosXlsx(clientes, ventas, createfile)
         flash("Los recibos se crearon satisfactoriamente!!")
@@ -629,8 +671,8 @@ def cartera():
     for cliente in clientes:
         totVentas = 0
         totAbonos = 0
-        ventas = call_db_all_dict(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
-        abonos = call_db_all_dict(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
 
         if cliente['NOMBRE'] not in allnames:
             allnames.append(cliente['NOMBRE'])
@@ -674,8 +716,8 @@ def carteraXlsx():
     for cliente in clientes:
         totVentas = 0
         totAbonos = 0
-        ventas = call_db_all_dict(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
-        abonos = call_db_all_dict(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
 
         if cliente['NOMBRE'] not in allnames:
             allnames.append({'nombre': cliente['NOMBRE']})
@@ -711,7 +753,7 @@ def carteraXlsx():
         
         totcartera.append({'cliente': cliente['NOMBRE'], 'totVentas': totVentas, 'totAbonos': totAbonos, 'grandTot': grandTot})
 
-    createfile = "Imprimir" + "_" + "Cartera" + "_"
+    createfile = "Reporte" + "_" + "Cartera" + "_"
             
     reporteCarteraXlsx(allnames, cartera, totcartera, createfile)
     flash("El excel de cartera se creo satisfactoriamente!!")
@@ -719,6 +761,6 @@ def carteraXlsx():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
 
 
