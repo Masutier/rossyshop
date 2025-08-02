@@ -30,17 +30,24 @@
                         </div>
 
                         <div class="mb-3">
+                            <div class="mb-3">
+                                <label for="nota_descriptiva" class="form-label">NOTA DESCRIPTIVA</label>
+                                <input type="text" class="form-control" id="nota_descriptiva" name="nota_descriptiva">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="qty" class="form-label">CANTIDAD</label>
+                            <input type="text" class="form-control" id="qty" name="qty" required>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="revista" class="form-label">REVISTA</label>
                             <select class="form-select" size="2" aria-label="Size 3 select example" name="revista" required>
                                 {% for revista in revistas %}
                                     <option value="{{ revista }}">{{ revista }}</option>
                                 {% endfor %}
                             </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="qty" class="form-label">CANTIDAD</label>
-                            <input type="text" class="form-control" id="qty" name="qty" required>
                         </div>
 
                         <div class="col-lg-11 row mt-5 mx-auto ">

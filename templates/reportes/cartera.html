@@ -16,14 +16,14 @@
 
             <div class="col-10 mx-auto mb-4 c">
                 {% for name in allnames %}
-                    <button class="btn btn-light btn-sm mx-auto m-1" onclick="goBack()"><a href="#{{ name }}">{{ name }}</a></button>
+                    <button class="btn btn-light btn-sm mx-auto m-1" onclick="goBack()"><a href="#{{ name }}">{{ name['nombre'] }}</a></button>
                 {% endfor %}
             </div>
 
             <div class="col-lg-12 col-sm-12 mx-auto c">
                 {% for name in allnames %}
                     <div id='{{ name }}'>
-                        <h3>{{ name }}</h3>
+                        <h3>{{ name['nombre'] }}</h3>
                     </div>
 
                     <div class="table-responsive">
@@ -41,7 +41,7 @@
                             </thead>
                             <tbody>
                                 {% for item in cartera %}
-                                    {% if item['cliente'] == name %}
+                                    {% if item['cliente'] == name['nombre'] %}
                                     <tr>
                                         <td>{{ item['id'] }}</td>
                                         <td>{{ item['descripcion'] }}</td>
@@ -52,6 +52,7 @@
                                         {% else %}
                                             <td></td>
                                         {% endif %}
+
                                         {% if item['Atotal'] %}
                                             <td>{{ "{:,}".format(item['Atotal']) }}</td>
                                         {% else %}
@@ -64,7 +65,7 @@
                             </tbody>
                             <tbody>
                                 {% for totales in totcartera %}
-                                    {% if totales['cliente'] == name %}
+                                    {% if totales['cliente'] == name['nombre'] %}
                                     <tr>
                                         <td></td>
                                         <td></td>
@@ -81,7 +82,13 @@
                                         {% else %}
                                             <td>0</td>
                                         {% endif %}
-                                        <td></td>
+
+                                        {% if name['deuda'] != 0 %}
+                                            <td><h5>Saldo {{ "{:,}".format(name['deuda']) }}</h5></td>
+                                        {% else %}
+                                            <td><h5>Saldo 0</h5></td>
+                                        {% endif %}
+
                                     </tr>
                                     {% endif %}
                                 {% endfor %}

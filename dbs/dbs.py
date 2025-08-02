@@ -71,6 +71,14 @@ def update_data(sqlQuery, data1):
     conn.close()
 
 
+def delete_data(sqlQuery, data1):
+    conn = sql3.connect(os.path.join(BASE_DIR, db_name_product))
+    cur = conn.cursor()
+    cur.execute(sqlQuery, (data1,))
+    conn.commit()
+    conn.close()
+
+
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<< CLIENTES >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 def call_db_dict_clientes(sqlQuery):
@@ -204,10 +212,11 @@ def startApp():
             CLIENTE_ID INTEGER,
             CL_PRODUCTO INTEGER,
             DESCRIPCION_PRODUCTO TEXT,
-            P_LISTA_PRODUCTO INTEGER,
-            P_CATALOGO_PRODUCTO INTEGER,
-            REVISTA_PRODUCTO TEXT,
-            CAMPANNA_PRODUCTO TEXT,
+            NOTA_DESCRIPTIVA TEXT,
+            P_COSTO INTEGER,
+            P_VENTA INTEGER,
+            REVISTA TEXT,
+            CAMPANNA TEXT,
             CANTIDAD INTEGER,
             IMPRENTA TEXT,
             FECHA_IMPRENTA DATETIME,
@@ -232,8 +241,8 @@ def startApp():
             ID INTEGER PRIMARY KEY NOT NULL,
             CL INTEGER,
             DESCRIPCION TEXT,
-            P_LISTA INTEGER,
-            P_CATALOGO INTEGER,
+            P_COSTO INTEGER,
+            P_VENTA INTEGER,
             UBICACION TEXT,
             REVISTA TEXT,
             CAMPANNA TEXT,

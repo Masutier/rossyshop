@@ -27,69 +27,94 @@
                     </div>
                     <div class="col-6 mx-auto">
                         <div class="mb-3">
-                            <label for="clientId" class="form-label">Cliente</label>
-                            <h5 id="clientId">{{ cliente['NOMBRE'] }}</h5>
+                            <label for="codigo" class="form-label">Codigo del Producto</label>
+                            <h5 id="codigo">{{ venta['CL_PRODUCTO'] }}</h5>
                         </div>
                     </div>
                 </div>
                 <hr>
 
                 <div class="col-10 row mx-auto c">
-                    <div class="col-3 mx-auto">
+                    <div class="col-6 mx-auto">
                         <div class="mb-3">
-                            <label for="clientId" class="form-label">Codigo del Producto</label>
-                            <h5 id="clientId">{{ venta['CL_PRODUCTO'] }}</h5>
+                            <label for="producto" class="form-label">Producto</label>
+                            <h5 id="producto">{{ venta['DESCRIPCION_PRODUCTO'] }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="col-10 row mx-auto c">
+                    <div class="col-6 mx-auto">
+                        <div class="mb-3">
+                            <label for="revista" class="form-label">Revista</label>
+                            <h5 id="revista">{{ venta['REVISTA'] }}</h5>
                         </div>
                     </div>
                     <div class="col-6 mx-auto">
                         <div class="mb-3">
-                            <label for="clientId" class="form-label">Producto</label>
-                            <h5 id="clientId">{{ venta['DESCRIPCION_PRODUCTO'] }}</h5>
-                        </div>
-                    </div>
-                    <div class="col-3 mx-auto">
-                        <div class="mb-3">
-                            <label for="clientId" class="form-label">Revista/Campaña</label>
-                            <h5 id="clientId">{{ venta['REVISTA_PRODUCTO'] }} / {{ venta['CAMPANNA_PRODUCTO'] }}</h5>
+                            <label for="campa" class="form-label">Campaña</label>
+                            <h5 id="campa">{{ venta['CAMPANNA'] }}</h5>
                         </div>
                     </div>
                 </div>
                 <hr>
 
                 <div class="col-10 row mx-auto c">
-                    {% if venta['P_CATALOGO_PRODUCTO'] %}
+                    {% if venta['P_COSTO'] %}
                         <div class="col-3 mx-auto">
                             <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
-                                <h5 id="clientId">{{ "{:,}".format(venta['P_CATALOGO_PRODUCTO']) }}</h5>
+                                <label for="clientId" class="form-label">Precio Costo</label>
+                                {% if venta['P_COSTO'] %}
+                                    <td>{{ "{:,}".format(venta['P_COSTO']) }}</td>
+                                {% else %}
+                                    <td>0</td>
+                                {% endif %}
                             </div>
                         </div>
                     {% else %}
                         <div class="col-3 mx-auto">
                             <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <label for="clientId" class="form-label">Precio Costo</label>
+                                <h5 id="clientId">0</h5>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if venta['P_VENTA'] %}
+                        <div class="col-3 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Venta</label>
+                                <h5 id="clientId">{{ "{:,}".format(venta['P_VENTA']) }}</h5>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-3 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Precio Venta</label>
                                 <h5 id="clientId">0</h5>
                             </div>
                         </div>
                     {% endif %}
                     
-                    <div class="col-4 mx-auto">
+                    <div class="col-3 mx-auto">
                         <div class="mb-3">
                             <label for="clientId" class="form-label">Cantidad</label>
                             <h5 id="clientId">{{ venta['CANTIDAD'] }}</h5>
                         </div>
                     </div>
+
                     {% if total %}
-                        <div class="col-4 mx-auto">
+                        <div class="col-3 mx-auto">
                             <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <label for="clientId" class="form-label">Total</label>
                                 <h5 id="clientId">{{ "{:,}".format(total) }}</h5>
                             </div>
                         </div>
                     {% else %}
-                        <div class="col-4 mx-auto">
+                        <div class="col-3 mx-auto">
                             <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
+                                <label for="clientId" class="form-label">Total</label>
                                 <h5 id="clientId">0</h5>
                             </div>
                         </div>
@@ -98,33 +123,28 @@
                 <hr>
 
                 <div class="col-10 row mx-auto c">
-                    {% if venta['P_LISTA_PRODUCTO'] %}
-                        <div class="col-4 mx-auto">
-                            <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
-                                <h5 id="clientId">{{ "{:,}".format(venta['P_LISTA_PRODUCTO']) }}</h5>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="col-4 mx-auto">
-                            <div class="mb-3">
-                                <label for="clientId" class="form-label">Precio Lista</label>
-                                <h5 id="clientId">0</h5>
-                            </div>
-                        </div>
-                    {% endif %}
                     <div class="col-4 mx-auto">
                         <div class="mb-3">
-                            <label for="clientId" class="form-label">Fecha creación</label>
+                            <label for="clientId" class="form-label">Fecha de Venta</label>
                             <h5 id="clientId">{{ venta['FECHA'] }}</h5>
                         </div>
                     </div>
+                    
                     <div class="col-4 mx-auto">
                         <div class="mb-3">
-                            <label for="clienteImpreso" class="form-label">Impreso</label>
+                            <label for="clienteImpreso" class="form-label">Reportado?</label>
                             <h5 id="clienteImpreso">{{ venta['IMPRENTA'] }}</h5>
                         </div>
                     </div>
+
+                    {% if venta['IMPRENTA'] == "SI" %}
+                        <div class="col-4 mx-auto">
+                            <div class="mb-3">
+                                <label for="clientId" class="form-label">Fecha del Reporte</label>
+                                <h5 id="clientId">{{ venta['FECHA_IMPRENTA'] }}</h5>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 

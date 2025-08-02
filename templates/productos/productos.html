@@ -23,11 +23,13 @@
                             <th scope="col">Id</th>
                             <th scope="col">CL</th>
                             <th scope="col">DESCRIPCION</th>
-                            <th scope="col">P_CATALOGO</th>
+                            <th scope="col">PRECIO DE VENTA</th>
                             <th scope="col">UBICACION</th>
                             <th scope="col">REVISTA</th>
                             <th scope="col">CAMPANNA</th>
                             <th scope="col">FECHA</th>
+                            <th scope="col">Show</th>
+                            <th scope="col">Update</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,8 +38,8 @@
                             <td>{{ producto['ID'] }}</td>
                             <td>{{ producto['CL'] }}</td>
                             <td>{{ producto['DESCRIPCION'] }}</td>
-                            {% if producto['P_CATALOGO'] %}
-                                <td>{{ "{:,}".format(producto['P_CATALOGO']) }}</td>
+                            {% if producto['P_VENTA'] %}
+                                <td>{{ "{:,}".format(producto['P_VENTA']) }}</td>
                             {% else %}
                                 <td>0</td>
                             {% endif %}
@@ -45,6 +47,8 @@
                             <td>{{ producto['REVISTA'] }}</td>
                             <td>{{ producto['CAMPANNA'] }}</td>
                             <td>{{ producto['FECHA'] }}</td>
+                            <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarProducto', id=producto['ID']) }}" aria-disabled="true">Mostrar</a></td>
+                            <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('modificarProducto', id=producto['ID']) }}" aria-disabled="true">Modificar</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

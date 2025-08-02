@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-3">
+    <div class="row">
+        
+        {% include 'partials/side_navbar.html' %}
+
+        <!-- *************** -->
+
+        <div class="col-9 mx-auto mt-4">
+
+            <div class="col-md-11 mx-auto mt-5">
+                <div class="row mb-5">
+                    <div class="col-5 mx-auto">
+                        <div class="mb-3 c">
+                            <h1>Modificar Producto</h1>
+                        </div>
+                    </div>
+
+                    <div class="col-3 mx-auto">
+                        <div class="mb-3 c">
+                            <h3>ID {{ producto['ID'] }}</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-3 mx-auto">
+                        <div class="mb-3 c">
+                            <h3>Codigo CL {{ producto['CL'] }}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{{ url_for('modificarProducto', id=producto['ID']) }}" method="POST">
+
+                    <div class="col-7 mx-auto mb-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputDescripcion">DESCRIPCION</span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputDescripcion" name="descripcion" value="{{ producto.DESCRIPCION }}" placeholder="{{ producto.DESCRIPCION }}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputCosto">P_COSTO</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCosto" name="costo" value="{{ producto.P_COSTO }}" placeholder="{{ producto.P_COSTO }}">
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputVenta">P_VENTA</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputVenta" name="venta" value="{{ producto.P_VENTA }}" placeholder="{{ producto.P_VENTA }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-7 mx-auto mb-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputUbica">Ubicación</span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputUbica" name="ubica" value="{{ producto.UBICACION }}" placeholder="{{ producto.UBICACION }}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputRevista">Revista</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputRevista" name="revista" value="{{ producto.REVISTA }}" placeholder="{{ producto.REVISTA }}">
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputCampanna">Campanna</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputCampanna" name="campanna" value="{{ producto.CAMPANNA }}" placeholder="{{ producto.CAMPANNA }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-10 row mt-5 mx-auto ">
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-warning" onclick="goBack()">Regresar</button>
+                            </div>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <input class="btn btn-success" type="submit" value="Crear">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {window.history.back();}
+</script>
+{% endblock %}

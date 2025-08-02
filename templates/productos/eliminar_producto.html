@@ -6,13 +6,12 @@
     <div class="col-md">
         <div class="card text-center txtcol29 mb-3" id="orders-delivered">
             <div class="card-header">
-                <h2 class="card-title">Eliminar Venta</h2>
+                <h2 class="card-title">Eliminar Producto</h2>
             </div>
 
             <div class="card-body">
                 <div class="col-lg-11 row mb-3 mx-auto ">
-                    <p>Estas segura de querer eliminar la Venta de</p>
-                    <p>{{ venta['DESCRIPCION_PRODUCTO'] }}? </p>
+                    <p >Estas segura de querer eliminar el Producto {{ producto['CL'] }}? </p>
                 </div>
 
                 <div class="col-lg-11 row mx-auto ">
@@ -25,7 +24,7 @@
                     <div class="col-6 mb-3">
                         <form action="" method="POST">
                             <div class="d-grid gap-2">
-                                <a class="btn btn-danger" href="{{ url_for('deleteVenta', id=venta['id']) }}" aria-disabled="true">Eliminar</a>
+                                <a class="btn btn-danger" href="{{ url_for('deleteProducto', id=producto['id']) }}" aria-disabled="true">Eliminar</a>
                             </div>
                         </form>
                     </div>
