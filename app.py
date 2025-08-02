@@ -308,7 +308,7 @@ def adminProducts():
     for item in nova:
         novaQty += 1
 
-    leon = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('LEONIZA',))
+    leon = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('LEONISA',))
     for item in leon:
         leonQty += 1
 
@@ -319,12 +319,6 @@ def adminProducts():
     invent = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('INVENTARIO',))
     for item in invent:
         inventQty += 1
-    
-    print(novaQty)
-    print(leonQty)
-    print(modaQty)
-    print(inventQty)
-
 
     title = "Administracion Productos"
     return render_template('productos/admin_products.html', title=title, novaQty=novaQty, leonQty=leonQty, modaQty=modaQty, inventQty=inventQty)

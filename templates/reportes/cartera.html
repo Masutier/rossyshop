@@ -23,7 +23,11 @@
             <div class="col-lg-12 col-sm-12 mx-auto c">
                 {% for name in allnames %}
                     <div id='{{ name }}'>
-                        <h3>{{ name['nombre'] }}</h3>
+                        {% if name['deuda'] != 0 %}
+                            <h3>{{ name['nombre'] }} -> Saldo {{ "{:,}".format(name['deuda']) }}</h3>
+                        {% else %}
+                            <h3>{{ name['nombre'] }} -> Saldo 0</h3>
+                        {% endif %}
                     </div>
 
                     <div class="table-responsive">
