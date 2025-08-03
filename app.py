@@ -517,6 +517,34 @@ def load_ventas():
     return render_template('ods_load.html', title="ods Load", function="load_ventas")
 
 
+@app.route('/filtrarAll/<filter>')
+def filtrarAll(filter):
+    revista = filter.upper()
+    ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE REVISTA = ?", (revista,))
+    ventasAll = []
+
+    for ventax in ventas:
+        cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (ventax["CLIENTE_ID"],))
+        total = int(ventax['P_VENTA']) * int(ventax['CANTIDAD'])
+
+        ventasAll.append({
+            'id': ventax["ID"],
+            'cliente': cliente['NOMBRE'], 
+            'producto': ventax['DESCRIPCION_PRODUCTO'],
+            'nota_descriptiva': ventax['NOTA_DESCRIPTIVA'], 
+            'revista': ventax['REVISTA'],
+            'campanna': ventax['CAMPANNA'],
+            'productoVal': ventax['P_VENTA'],
+            'qty': ventax['CANTIDAD'],
+            'total': total,
+            'fecha': ventax['FECHA'],
+            'impreso': ventax['IMPRENTA']
+        })
+        
+    title = "Ventas " + filter
+    return render_template('ventas/ventas.html', title=title, ventasAll=ventasAll)
+
+
 @app.route('/filtrar/<filter>')
 def filtrar(filter):
     revista = filter.upper()
@@ -669,7 +697,7 @@ def registrosExcel():
 @app.route('/cobrosXlsx', methods=['GET', 'POST'])
 def cobrosXlsx():
     if request.method == "POST":
-        ventasAll = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE REVISTA =? and CAMPANNA =?", (request.form['data1'], request.form['data2']))
+        ventasAll = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE IMPRENTA='NO' AND REVISTA =? AND CAMPANNA =?", (request.form['data1'], request.form['data2']))
         clientes = []
         ventas = []
 
@@ -693,9 +721,12 @@ def cobrosXlsx():
                 })
 
                 createfile = "Reporte" + "_" + request.form['data1'] + "_" + request.form['data2'] + "_"
+                imprenta = "SI"
                 fecha = datetime.today().date()
-                update_data_movim(f"UPDATE ventas SET IMPRENTA=? AND FECHA_IMPRENTA=? WHERE id=?", ("SI", fecha, venta['ID']))
-                
+                print("Listo para gravar")
+                update_data_movim(f"UPDATE ventas SET IMPRENTA=?, FECHA_IMPRENTA=? WHERE id=?", (imprenta, fecha, venta['ID']))
+                print('supuesto ya gravo')
+
             reporteCobrosXlsx(clientes, ventas, createfile)
             flash("Los recibos se crearon satisfactoriamente!!")
             return redirect(url_for('registrosExcel'))

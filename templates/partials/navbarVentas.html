@@ -1,25 +1,19 @@
-<div class="row mb-3">
-    <div class="col-lg-2 col-sm-10 mx-auto c">
-        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('crearVenta') }}">Crear Venta</a>
-    </div>
-
-    <div class="col-lg-2 col-sm-10 mx-auto c">
-        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Novaventa') }}">Filtrar Novaventa</a>
-    </div>
-
-    <div class="col-lg-2 col-sm-10 mx-auto c">
-        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Leonisa') }}">Filtrar Leonisa</a>
-    </div>
-
-    <div class="col-lg-2 col-sm-10 mx-auto c">
-        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Moda_Int') }}">Filtrar Moda Int</a>
-    </div>
-
-    <div class="col-lg-2 col-sm-10 mx-auto c">
-        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Inventario') }}">Filtrar Inventario</a>
-    </div>
-
-    <div class="col-lg-2 col-sm-10 mx-auto c">
+<div class="col-9 mx-auto c">
+    <div class="d-grid gap-2">
         <a class="btn btn-success btn-sm mb-3" href="{{ url_for('historia_ventas') }}">Todas las Ventas</a>
+        <hr>
+        <h6>Ventas Recientes</h6>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Novaventa') }}">Filtrar Novaventa</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Leonisa') }}">Filtrar Leonisa</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Moda_Int') }}">Filtrar Moda Int</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrar', filter='Inventario') }}">Filtrar Inventario</a>
+        <hr>
+        <h6>Todas Las Ventas</h6>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrarAll', filter='Novaventa') }}">Filtrar Novaventa</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrarAll', filter='Leonisa') }}">Filtrar Leonisa</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrarAll', filter='Moda_Int') }}">Filtrar Moda Int</a>
+        <a class="btn btn-success btn-sm mb-3" href="{{ url_for('filtrarAll', filter='Inventario') }}">Filtrar Inventario</a>
+        <hr>
     </div>
 </div>
+<hr>
