@@ -2,8 +2,9 @@
 {% block title %} {{title}} {% endblock %}
 {% block content %}
 
-<div class="col-11 mx-auto mt-4 mb-5">
+<div class="col-12 mx-auto p-4 mb-5">
     <div class="row">
+
         <div class="col-2 mx-auto mt-5">
             {% include 'partials/side_navbar.html' %}
         </div>
@@ -11,75 +12,92 @@
         <!-- *************** -->
 
         <div class="col-10 mx-auto mt-3">
-            <div class="col-lg-9 col-sm-12 mx-auto mb-5 c">
-                <h1>Cartera</h1>
+
+
+            <div class="col-lg-7 col-sm-10 mx-auto">
+                <h1>Rossy's Shop</h1>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-lg-6 col-sm-10 mx-auto c">
-                    {% if totVentas %}
-                        <h4>Total de Ventas = {{ "{:,}".format(totVentas) }}</h4>
-                    {% else %}
-                        <h4>Total de Ventas = 0</h4>
-                    {% endif %}
+            <div class="col-lg-11 mx-auto mb-5">
+                <h3 class="mb-3">Clientes</h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body c">
+                                <h0 class="card-title">{{ allclientes.clientesQty }}</h0>
+                                <h5 class="card-text">Clientes</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body mt-3 c">
+                                {% if allclientes.totVentas %}
+                                    <h1 id="costo">{{ "{:,}".format(allclientes.totVentas) }}</h1>
+                                {% else %}
+                                    <h0 id="costo">0</h0>
+                                {% endif %}
+
+                                <h5 class="card-text">en {{ allclientes.ventasQty }} Ventas</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body mt-3 c">
+                                {% if allclientes.totAbonos %}
+                                    <h1 id="costo">{{ "{:,}".format(allclientes.totAbonos) }}</h1>
+                                {% else %}
+                                    <h0 id="costo">0</h0>
+                                {% endif %}
+
+                                <h5 class="card-text">en {{ allclientes.abonosQty }} Abonos</h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="col-lg-6 col-sm-10 mx-auto c">
-                    {% if totAbonos %}
-                        <h4>Total en Abonos = {{ "{:,}".format(totAbonos) }}</h4>
-                    {% else %}
-                        <h4>Total de Abonos = 0</h4>
-                    {% endif %}
+            <div class="col-lg-11 mx-auto mb-5">
+                <h3 class="mb-3">Productos Registrados</h3>
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body c">
+                                <h1 class="card-title">{{ productos.novaQty }}</h1>
+                                <h5 class="card-text">NOVAVENTA</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body c">
+                                <h1 class="card-title">{{ productos.leonQty }}</h1>
+                                <h5 class="card-text">LEONISA</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body c">
+                                <h1 class="card-title">{{ productos.modaQty }}</h1>
+                                <h5 class="card-text">MODA INTERNACIONAL</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body c">
+                                <h1 class="card-title">{{ productos.inventQty }}</h1>
+                                <h5 class="card-text">INVENTARIO</h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="table-responsive p-4 backs">
-                <table id="codeCiiu" class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Venta</th>
-                            <th scope="col">Abono</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cartItem in cartera %}
-                            {% if cartItem.item == 'venta' %}
-                                <tr>
-                                    <td>{{ cartItem['fecha'] }}</td>
-                                    <td>{{ cartItem['cliente'] }}</td>
-                                    <td>{{ cartItem['producto'] }}</td>
-                                    {% if cartItem['total'] %}
-                                        <td>{{ "{:,}".format(cartItem['total']) }}</td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
-                                    <td>0</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td>{{ cartItem['fecha'] }}</td>
-                                    <td>{{ cartItem['cliente'] }}</td>
-                                    <td>{{ cartItem['notas'] }}</td>
-                                    <td>0</td>
-                                    {% if cartItem['abono'] %}
-                                        <td>{{ "{:,}".format(cartItem['abono']) }}</td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
         </div>
-
     </div>
 </div>
-
-<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
 
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'layout_dt.html' %}
 {% block title %} {{title}} {% endblock %}
 {% block content %}
 
@@ -16,96 +16,75 @@
                 <h1 class="c">Cartera</h1>
             </div>
 
-            <div class="col-10 mx-auto mb-4 c">
-                {% for name in allnames %}
-                    <button class="btn btn-light btn-sm mx-auto m-1" onclick="goBack()"><a href="#{{ name }}">{{ name['nombre'] }}</a></button>
-                {% endfor %}
-            </div>
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-success table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Revista</th>
+                            <th scope="col">Cant</th>
+                            <th scope="col">Venta</th>
+                            <th scope="col">Abono</th>
+                            <th scope="col">FECHA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cartera %}
+                            <tr>
+                                <td>{{ item['id'] }}</td>
+                                <td>{{ item['descripcion'] }}</td>
+                                <td>{{ item['revista'] }}</td>
+                                <td>{{ item['qty'] }}</td>
+                                
+                                {% if item['Vtotal'] %}
+                                    <td>{{ "{:,}".format(item['Vtotal']) }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
 
-            <div class="col-lg-12 col-sm-12 mx-auto c">
-                {% for name in allnames %}
-                    <div id='{{ name }}'>
-                        {% if name['deuda'] != 0 %}
-                            <h3>{{ name['nombre'] }} -> Saldo {{ "{:,}".format(name['deuda']) }}</h3>
-                        {% else %}
-                            <h3>{{ name['nombre'] }} -> Saldo 0</h3>
-                        {% endif %}
-                    </div>
+                                {% if item['Atotal'] %}
+                                    <td>{{ "{:,}".format(item['Atotal']) }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                                <td>{{ item['fecha'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><h5>TOTALES</h5></td>
+                            <td></td>
+                            {% if totVentas %}
+                                <td>{{ "{:,}".format(totVentas) }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
 
-                    <div class="table-responsive">
-                        <table class="table table-striped" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Descripcion</th>
-                                    <th scope="col">Revista</th>
-                                    <th scope="col">Cant</th>
-                                    <th scope="col">Venta</th>
-                                    <th scope="col">Abono</th>
-                                    <th scope="col">FECHA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in cartera %}
-                                    {% if item['cliente'] == name['nombre'] %}
-                                    <tr>
-                                        <td>{{ item['id'] }}</td>
-                                        <td>{{ item['descripcion'] }}</td>
-                                        <td>{{ item['revista'] }}</td>
-                                        <td>{{ item['qty'] }}</td>
-                                        {% if item['Vtotal'] %}
-                                            <td>{{ "{:,}".format(item['Vtotal']) }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
+                            {% if totAbonos %}
+                                <td>{{ "{:,}".format(totAbonos) }}</td>
+                            {% else %}
+                                <td>0</td>
+                            {% endif %}
 
-                                        {% if item['Atotal'] %}
-                                            <td>{{ "{:,}".format(item['Atotal']) }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                        <td>{{ item['fecha'] }}</td>
-                                    </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                            <tbody>
-                                {% for totales in totcartera %}
-                                    {% if totales['cliente'] == name['nombre'] %}
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td><h5>TOTALES</h5></td>
-                                        <td></td>
-                                        {% if totales['totVentas'] %}
-                                            <td>{{ "{:,}".format(totales['totVentas']) }}</td>
-                                        {% else %}
-                                            <td>0</td>
-                                        {% endif %}
+                            {% if totVentas != 0 %}
+                                <td><h5>{{ "{:,}".format(totVentas - totAbonos) }}</h5></td>
+                            {% else %}
+                                <td><h5>0</h5></td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
 
-                                        {% if totales['totAbonos'] %}
-                                            <td>{{ "{:,}".format(totales['totAbonos']) }}</td>
-                                        {% else %}
-                                            <td>0</td>
-                                        {% endif %}
-
-                                        {% if name['deuda'] != 0 %}
-                                            <td><h5>Saldo {{ "{:,}".format(name['deuda']) }}</h5></td>
-                                        {% else %}
-                                            <td><h5>Saldo 0</h5></td>
-                                        {% endif %}
-
-                                    </tr>
-                                    {% endif %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endfor %}
             </div>
         </div>
 
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
 
 {% endblock %}

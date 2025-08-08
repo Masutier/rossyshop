@@ -1,0 +1,67 @@
+{% extends 'layout_dt.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block content %}
+
+<div class="col-11 mx-auto mt-4 mb-5">
+    <div class="row">
+
+        <div class="col-2 mx-auto mt-5">
+            {% include 'partials/side_navbar.html' %}
+        </div>
+
+        <!-- *************** -->
+
+        <div class="col-10 mx-auto">
+            <div class="col-9 mx-auto mb-4">
+                <h1 class="c">Cartera</h1>
+            </div>
+
+            <div class="table-responsive p-4 backs">
+                <table id="codeCiiu" class="table table-success table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Deuda</th>
+                            <th scope="col">Abonos</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Show</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for totales in totcartera %}
+                            <tr>
+                                <td>{{ totales['cliente'] }}</td>
+
+                                {% if totales['totVentas'] %}
+                                    <td>{{ "{:,}".format(totales['totVentas']) }}</td>
+                                {% else %}
+                                    <td>0</td>
+                                {% endif %}
+
+                                {% if totales['totAbonos'] %}
+                                    <td>{{ "{:,}".format(totales['totAbonos']) }}</td>
+                                {% else %}
+                                    <td>0</td>
+                                {% endif %}
+
+                                {% if totales['totVentas'] != 0 %}
+                                    <td><h5>{{ "{:,}".format(totales['totVentas'] - totales['totAbonos']) }}</h5></td>
+                                {% else %}
+                                    <td><h5>0</h5></td>
+                                {% endif %}
+
+                                <td><a class="btn btn-outline-success btn-sm" href="{{ url_for('mostrarCartera', id=totales['id']) }}" aria-disabled="true">Mostrar</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dataTable.js') }}"></script>
+
+{% endblock %}

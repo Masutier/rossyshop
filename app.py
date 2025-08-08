@@ -31,47 +31,60 @@ sudo systemctl status evalinstructor  # Verify it's running
 
 @app.route("/")
 def home():
-    try:
-        allventas = call_db_dict_movim(f"SELECT * FROM ventas ORDER BY FECHA")
-        allabonos = call_db_dict_movim("SELECT * FROM abonos ORDER BY FECHA")
-        cartera = []
-        totVentas = 0
-        totAbonos = 0
+    novaQty = 0
+    leonQty = 0
+    modaQty = 0
+    clientesQty = 0
+    inventQty = 0
+    ventasQty = 0
+    abonosQty = 0
+    totVentas = 0
+    totAbonos = 0
+    allclientes = []
 
-        for venta in allventas:
-            cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(venta["CLIENTE_ID"]),))
-            total = int(venta['P_VENTA']) * int(venta['CANTIDAD'])
+    nova = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('NOVAVENTA',))
+    for item in nova:
+        novaQty += 1
+
+    leon = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('LEONISA',))
+    for item in leon:
+        leonQty += 1
+
+    moda = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('MODA_INT',))
+    for item in moda:
+        modaQty += 1
+
+    invent = call_db_all_dict(f"SELECT * FROM productos WHERE REVISTA = ?", ('INVENTARIO',))
+    for item in invent:
+        inventQty += 1
+    
+    productos = {'novaQty':novaQty, 'leonQty':leonQty, 'modaQty':modaQty, 'inventQty':inventQty}
+
+
+    clientes = call_db_dict_clientes("SELECT * FROM clientes")
+    ventas = call_db_dict_movim("SELECT * FROM ventas")
+    abonos = call_db_dict_movim("SELECT * FROM abonos")
+    totcartera = []
+
+    for cliente in clientes:
+        clientesQty += 1
+
+        ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        for ventax in ventas:
+            ventasQty += 1
+            total = int(ventax['P_VENTA']) * int(ventax['CANTIDAD'])
             totVentas += total
 
-            cartera.append({
-                'item': 'venta',
-                'id': venta["ID"],
-                'cliente': cliente['NOMBRE'], 
-                'producto': venta['DESCRIPCION_PRODUCTO'],
-                'total': total,
-                'fecha': venta['FECHA'],
-            })
+        abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+        for abonox in abonos:
+            abonosQty += 1
+            totAbonos += abonox["VALOR"]
 
-        for abono in allabonos:
-            cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (int(abono["CLIENTE_ID"]),))
-            totAbonos += abono['VALOR']
+    allclientes = {'clientesQty': clientesQty, 'totVentas': totVentas, 'totAbonos': totAbonos, 'ventasQty':ventasQty, 'abonosQty':abonosQty}
 
-            cartera.append({
-                'item': 'abono',
-                'id': abono["ID"],
-                'cliente': cliente['NOMBRE'], 
-                'abono': abono['VALOR'],
-                'notas': abono['NOTAS'],
-                'fecha': abono['FECHA'],
-            })
 
-        #cartera = sorted(cartera, key=lambda x: x['fecha'], reverse=True)
-        return render_template('home.html', title="Rossy's Shop", cartera=cartera, totVentas=totVentas, totAbonos=totAbonos)
-    except Exception as e:
-        startApp()
-        flash(f'Error al comenzar la app: {str(e)}')
-
-        return render_template('home.html', title="Rossy's Shop")
+    title = "Administracion Productos"
+    return render_template('home.html', title="Rossy's Shop", productos=productos, allclientes=allclientes)
 
 
 @app.route('/odsLoad')
@@ -775,8 +788,6 @@ def cartera():
     clientes = call_db_dict_clientes("SELECT * FROM clientes")
     ventas = call_db_dict_movim("SELECT * FROM ventas")
     abonos = call_db_dict_movim("SELECT * FROM abonos")
-    allnames = []
-    cartera = []
     totcartera = []
 
     for cliente in clientes:
@@ -785,35 +796,53 @@ def cartera():
         ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
         abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
 
-        if cliente['NOMBRE'] not in allnames:
-            allnames.append({"nombre": cliente['NOMBRE'], "deuda": cliente['DEUDA']})
-
         for ventax in ventas:
             total = int(ventax['P_VENTA']) * int(ventax['CANTIDAD'])
-            cartera.append({
-                'cliente': cliente["NOMBRE"],
-                'id': ventax["ID"],
-                'descripcion': ventax['DESCRIPCION_PRODUCTO'], 
-                'revista': ventax['REVISTA'], 
-                'campanna': ventax['CAMPANNA'], 
-                'qty': ventax["CANTIDAD"],
-                'Vtotal': total,
-                'fecha': ventax['FECHA']
-            })
             totVentas += total
-        
-        for abonox in abonos:
-            cartera.append({
-                'cliente': cliente["NOMBRE"],
-                'id': abonox["ID"],
-                'descripcion': abonox['NOTAS'], 
-                'Atotal': abonox["VALOR"],
-                'fecha': ventax['FECHA']
-            })
-            totAbonos += abonox["VALOR"]
-        totcartera.append({'cliente': cliente["NOMBRE"], 'totVentas': totVentas, 'totAbonos': totAbonos})
 
-    return render_template('reportes/cartera.html', title="Cartera", allnames=allnames, cartera=cartera, totcartera=totcartera)
+        for abonox in abonos:
+            totAbonos += abonox["VALOR"]
+
+        totcartera.append({'id': cliente["ID"], 'cliente': cliente["NOMBRE"], 'totVentas': totVentas, 'totAbonos': totAbonos})
+
+    return render_template('reportes/carteras.html', title="Cartera", totcartera=totcartera)
+
+
+@app.route('/mostrarCartera/<int:id>', methods=['GET', 'POST'])
+def mostrarCartera(id):
+    cliente = call_db_one_dict_clientes(f"SELECT * FROM clientes WHERE ID = ?", (id,))
+    ventas = call_db_all_dict_movim(f"SELECT * FROM ventas WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+    abonos = call_db_all_dict_movim(f"SELECT * FROM abonos WHERE CLIENTE_ID = ? ORDER BY FECHA DESC", (cliente['ID'],))
+    cartera = []
+    totVentas = 0
+    totAbonos = 0
+    totcartera = []
+
+    for ventax in ventas:
+        total = int(ventax['P_VENTA']) * int(ventax['CANTIDAD'])
+        totVentas += total
+        cartera.append({
+            'cliente': cliente["NOMBRE"],
+            'id': ventax["ID"],
+            'descripcion': ventax['DESCRIPCION_PRODUCTO'], 
+            'revista': ventax['REVISTA'], 
+            'campanna': ventax['CAMPANNA'], 
+            'qty': ventax["CANTIDAD"],
+            'Vtotal': total,
+            'fecha': ventax['FECHA']
+        })
+
+    for abonox in abonos:
+        totAbonos += abonox["VALOR"]
+        cartera.append({
+            'cliente': cliente["NOMBRE"],
+            'id': abonox["ID"],
+            'descripcion': abonox['NOTAS'], 
+            'Atotal': abonox["VALOR"],
+            'fecha': ventax['FECHA']
+        })
+
+    return render_template('reportes/cartera.html', title="Cartera", cartera=cartera, totVentas=totVentas, totAbonos=totAbonos)
 
 
 @app.route('/carteraXlsx')
@@ -881,5 +910,4 @@ def download(filename):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5005, debug=True)
-
 
