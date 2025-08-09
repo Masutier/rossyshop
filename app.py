@@ -59,8 +59,6 @@ def home():
         inventQty += 1
     
     productos = {'novaQty':novaQty, 'leonQty':leonQty, 'modaQty':modaQty, 'inventQty':inventQty}
-
-
     clientes = call_db_dict_clientes("SELECT * FROM clientes")
     ventas = call_db_dict_movim("SELECT * FROM ventas")
     abonos = call_db_dict_movim("SELECT * FROM abonos")
@@ -81,7 +79,6 @@ def home():
             totAbonos += abonox["VALOR"]
 
     allclientes = {'clientesQty': clientesQty, 'totVentas': totVentas, 'totAbonos': totAbonos, 'ventasQty':ventasQty, 'abonosQty':abonosQty}
-
 
     title = "Administracion Productos"
     return render_template('home.html', title="Rossy's Shop", productos=productos, allclientes=allclientes)
