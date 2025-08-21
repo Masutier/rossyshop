@@ -211,6 +211,11 @@ def crearProducto():
         incomming = request.form
         productos = call_db_dict("SELECT * FROM productos")
 
+        if not productos:
+            save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_COSTO, P_VENTA, UBICACION, REVISTA, CAMPANNA) VALUES (?, ?, ?, ?, ?, ?, ?)", (int(incomming['cl']), incomming['descripcion'], int(incomming['plista']), int(incomming['pcatalogo']), incomming['ubica'], incomming['revista'], incomming['campanna']))
+            flash('El Producto se creo exitosamente!.')
+            return redirect(url_for('all_productos'))
+
         for producto in productos:
             if int(incomming['cl']) == int(producto['CL']) and int(incomming['pcatalogo']) == int(producto['P_VENTA']):
                 flash('El Producto YA EXISTE!.')
@@ -219,7 +224,7 @@ def crearProducto():
                 flash('El Producto YA EXISTE pero es diferente!.')
                 return redirect(url_for('all_productos'))
             else:
-                save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_VENTA, UBICACION, REVISTA, CAMPANNA) VALUES (?, ?, ?, ?, ?, ?)", (int(incomming['cl']), incomming['descripcion'], int(incomming['pcatalogo']), incomming['ubica'], incomming['revista'], incomming['CAMPANNA']))
+                save_data(f"INSERT INTO productos (CL, DESCRIPCION, P_COSTO, P_VENTA, UBICACION, REVISTA, CAMPANNA) VALUES (?, ?, ?, ?, ?, ?, ?)", (int(incomming['cl']), incomming['descripcion'], int(incomming['plista']), int(incomming['pcatalogo']), incomming['ubica'], incomming['revista'], incomming['campanna']))
                 flash('El Producto se creo exitosamente!.')
                 return redirect(url_for('all_productos'))
     
@@ -522,7 +527,7 @@ def load_ventas():
                     update_data_clientes(f"UPDATE clientes SET DEUDA=?, FECHA_ULTIMA_COMPRA=? WHERE id=?", (deuda, fecha, row['CLIENTE_ID']))
 
         flash('La plantilla se subio exitosamente!.')
-        return redirect(url_for('home'))
+        return redirect(url_for('all_ventas'))
 
     return render_template('ods_load.html', title="ods Load", function="load_ventas")
 
@@ -906,5 +911,5 @@ def download(filename):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5005, debug=True)
+    app.run(host='0.0.0.0', port=5055, debug=True)
 
