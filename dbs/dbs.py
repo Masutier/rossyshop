@@ -189,7 +189,7 @@ def createTableMovim(sqlQuery):
     conn.close()
 
 
-def startApp():
+def clientesTable():
     clientesQuery = f"""CREATE TABLE IF NOT EXISTS clientes (
             ID INTEGER PRIMARY KEY NOT NULL,
             NOMBRE TEXT NOT NULL,
@@ -207,6 +207,7 @@ def startApp():
     createTableClientes(clientesQuery)
 
 
+def ventasTable():
     ventasQuery = f"""CREATE TABLE IF NOT EXISTS ventas (
             ID INTEGER PRIMARY KEY NOT NULL,
             CLIENTE_ID INTEGER,
@@ -226,6 +227,7 @@ def startApp():
     createTableMovim(ventasQuery)
 
 
+def abonosTable():
     abonosQuery = f"""CREATE TABLE abonos (
             ID INTEGER PRIMARY KEY NOT NULL,
             CLIENTE_ID INTEGER,
@@ -237,6 +239,7 @@ def startApp():
     createTableMovim(abonosQuery)
 
 
+def productosTable():
     productosQuery = f"""CREATE TABLE productos (
             ID INTEGER PRIMARY KEY NOT NULL,
             CL INTEGER,

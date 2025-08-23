@@ -31,6 +31,7 @@ sudo systemctl status evalinstructor  # Verify it's running
 
 @app.route("/")
 def home():
+    #ventasTable()
     novaQty = 0
     leonQty = 0
     modaQty = 0
@@ -519,9 +520,9 @@ def load_ventas():
             for product in productos:
                 if product['CL'] == row['CL_PRODUCTO']:
                     imprenta = "NO"
-                    total = product['P_VENTA'] * row['CANTIDAD']
-                    deuda = int(cliente['DEUDA']) + total
-                    fecha = datetime.today().date()
+                    total = int(product['P_VENTA']) * int(row['CANTIDAD'])
+                    deuda = int(cliente['DEUDA']) + int(total)
+                    fecha = datetime.today()
 
                     save_data_movim(f"INSERT INTO ventas (CLIENTE_ID, CL_PRODUCTO, DESCRIPCION_PRODUCTO, NOTA_DESCRIPTIVA, CANTIDAD, P_COSTO, P_VENTA, REVISTA, CAMPANNA, IMPRENTA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (row['CLIENTE_ID'], row['CL_PRODUCTO'], product['DESCRIPCION'], row['NOTA_DESCRIPTIVA'], row['CANTIDAD'], product['P_COSTO'], product['P_VENTA'], row['REVISTA'], row['CAMPANNA'], imprenta))
                     update_data_clientes(f"UPDATE clientes SET DEUDA=?, FECHA_ULTIMA_COMPRA=? WHERE id=?", (deuda, fecha, row['CLIENTE_ID']))
